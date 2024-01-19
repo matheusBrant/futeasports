@@ -1,0 +1,19 @@
+{
+  "name": "futesports",
+  "version": "1.0.0",
+  "description": "Node js studies and esports",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matheusBrant/futeasports.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matheusBrant/futeasports/issues"
+  },
+  "homepage": "https://github.com/matheusBrant/futeasports#readme"
+}
