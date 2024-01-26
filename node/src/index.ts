@@ -1,7 +1,7 @@
-import { teste } from './application/v1/usecases/players/getPlayer';
+import { getPositions } from './application/v1/usecases/players/getPositions'
 
-async function run() {
-  await teste();
+async function run (): Promise<void> {
+  await getPositions()
 }
 
-run();
+void run()
