@@ -1,4 +1,4 @@
 export interface ListResult {
-    data: Record<string, any> | undefined
-    count: number
+  data: Record<string, any> | undefined
+  count: number
 }

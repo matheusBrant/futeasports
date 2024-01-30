@@ -1,1 +1,1 @@
-# futeasports  init dotnet
+# futeasports init node and dotnet
