@@ -19,9 +19,25 @@ export async function getPlayers (): Promise<void> {
         .filter((player: Record<string, any>) => player.gender.id === 0)
         .map((player: Record<string, any>) => {
           return {
+            id: player.id,
             name: `${player.firstName} ${player.lastName}`,
+            birthdate: player.birthdate,
+            height: player.height,
             overall: player.overallRating,
-            rank: player.rank
+            rank: player.rank,
+            positions: { id: player.position.id, label: player.position.label },
+            nationality: { id: player.nationality.id, label: player.nationality.label },
+            team: { id: player.team.id, label: player.team.label },
+            shieldUrl: player.shieldUrl/* ,
+            skillMoves: player.skillMoves,
+            weakFootAbility: player.weakFootAbility,
+            attackingWorkRate: player.attackingWorkRate,
+            defensiveWorkRate: player.defensiveWorkRate,
+            preferredFoot: player.preferredFoot,
+            leagueName: player.leagueName,
+            weight: player.weight,
+            avatarUrl: player.avatarUrl,
+            shieldUrl: player.shieldUrl */
           }
         })
 
