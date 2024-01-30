@@ -1,7 +1,7 @@
-import { getPlayers } from './application/v1/usecases/players/getPlayer'
+import { getLeaguesTeams } from './application/v1/usecases/players/getLeaguesTeams'
 
 async function run (): Promise<void> {
-  await getPlayers()
+  await getLeaguesTeams()
 }
 
 void run()
