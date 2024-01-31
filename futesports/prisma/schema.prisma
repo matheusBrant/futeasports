@@ -19,3 +19,16 @@ model Post {
 
     @@index([name])
 }
+
+model positions {
+    id        String  @id @default(cuid())
+    idApi     Int
+    name      String
+    shortName      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    deletedAt DateTime?
+
+    @@index([name])
+}
+

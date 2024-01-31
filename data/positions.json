@@ -1,0 +1,77 @@
+[
+    {
+        "id": 14,
+        "name": "Center Midfielder",
+        "shortName": "CM"
+    },
+    {
+        "id": 5,
+        "name": "Center Back",
+        "shortName": "CB"
+    },
+    {
+        "id": 2,
+        "name": "Right Wing Back",
+        "shortName": "RWB"
+    },
+    {
+        "id": 23,
+        "name": "Right Wing",
+        "shortName": "RW"
+    },
+    {
+        "id": 10,
+        "name": "Center Defensive Midfielder",
+        "shortName": "CDM"
+    },
+    {
+        "id": 7,
+        "name": "Left Back",
+        "shortName": "LB"
+    },
+    {
+        "id": 8,
+        "name": "Left Wing Back",
+        "shortName": "LWB"
+    },
+    {
+        "id": 3,
+        "name": "Right Back",
+        "shortName": "RB"
+    },
+    {
+        "id": 18,
+        "name": "Center Attacking Midfielder",
+        "shortName": "CAM"
+    },
+    {
+        "id": 27,
+        "name": "Left Wing",
+        "shortName": "LW"
+    },
+    {
+        "id": 16,
+        "name": "Left Midfielder",
+        "shortName": "LM"
+    },
+    {
+        "id": 0,
+        "name": "Goalkeeper",
+        "shortName": "GK"
+    },
+    {
+        "id": 21,
+        "name": "Center Forward",
+        "shortName": "CF"
+    },
+    {
+        "id": 25,
+        "name": "Striker",
+        "shortName": "ST"
+    },
+    {
+        "id": 12,
+        "name": "Right Midfielder",
+        "shortName": "RM"
+    }
+]
