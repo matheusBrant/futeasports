@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* import { PrismaClient } from "@prisma/client";
-import { promises as fsPromises } from 'fs'; */
+// import { PrismaClient } from "@prisma/client";
+import { promises as fsPromises } from 'fs';
 import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
 
@@ -57,23 +57,36 @@ export default async function Home() {
 
 async function CrudShowcase() {
   const latestPost = await api.post.getLatest.query();
-  /* const positonDataSet = '../data/positions.json'
+  const positonDataSet = '../data/players.json'
 
-  const prisma = new PrismaClient()
+  // const prisma = new PrismaClient()
   const data = await fsPromises.readFile(positonDataSet, 'utf8');
   const parsedData = JSON.parse(data)
-
-  parsedData.map(async (position: Record<string, unknown>) => {
-    const addPosition = await prisma.positions.create({
-      data: {
-        idApi: position.id as number,
-        name: position.name as string,
-        shortName: position.shortName as string,
-        deletedAt: null
-      }
-    })
-    console.log(addPosition)
-  }) */
+  console.log(parsedData.length)
+  /* async function insertPlayers() {
+    for (const player of parsedData) {
+      const addPlayers = await prisma.players.create({  
+        data: {
+          idApi: player.id as number,
+          rank: player.rank as number,
+          name: player.name as string,
+          commonName: player.commonName as string,
+          birthdate: player.birthdate as string,
+          height: player.height as number,
+          weight: player.weight as number,
+          avatarUrl: player.avatarUrl as string,
+          shieldUrl: player.shieldUrl as string,
+          idNationality: player.nationality_id as number,
+          deletedAt: null
+        }
+      });
+  
+      console.log(addPlayers);
+  
+      await new Promise(resolve => setTimeout(resolve, 200));
+    }
+  } */
+    
   
 
   return (
