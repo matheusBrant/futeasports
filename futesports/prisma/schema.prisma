@@ -22,7 +22,7 @@ model Post {
 
 model positions {
     id        String  @id @default(cuid())
-    idApi     Int
+    idApi     Int @unique
     name      String
     shortName      String
     createdAt DateTime @default(now())
@@ -30,5 +30,69 @@ model positions {
     deletedAt DateTime?
 
     @@index([name])
+}
+
+model nationalities {
+    id        String  @id @default(cuid())
+    idApi     Int @unique
+    name      String
+    imageUrl  String
+    isPopular  Boolean
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    deletedAt DateTime?
+
+    players  players[]
+
+    @@index([name])
+}
+
+model leagues {
+  id        String    @id @default(cuid())
+  idApi     Int @unique
+  name      String
+  idRegion  Int
+  isPopular Boolean
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  teams     teams[]
+
+  @@index([name])
+}
+
+model teams {
+  id        String    @id @default(cuid())
+  idApi     Int @unique
+  idLeague  Int
+  name      String
+  imageUrl  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  league    leagues   @relation(fields: [idLeague], references: [idApi])
+
+  @@index([name])
+}
+
+model players {
+  id       String    @id @default(cuid())
+  idApi    Int @unique
+  rank     Int
+  name      String
+  commonName   String?
+  birthdate    String
+  height  Int
+  weight  Int
+  avatarUrl   String
+  shieldUrl   String
+  idNationality  Int
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  nationality    nationalities   @relation(fields: [idNationality], references: [idApi])
+
+  @@index([name])
 }
 
