@@ -29,6 +29,8 @@ model positions {
     updatedAt DateTime @updatedAt
     deletedAt DateTime?
 
+    playerAssociations  playerAssociations[]
+
     @@index([name])
 }
 
@@ -72,6 +74,8 @@ model teams {
   deletedAt DateTime?
   league    leagues   @relation(fields: [idLeague], references: [idApi])
 
+  playerAssociations  playerAssociations[]
+
   @@index([name])
 }
 
@@ -91,8 +95,72 @@ model players {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
+
   nationality    nationalities   @relation(fields: [idNationality], references: [idApi])
+  playerAssociations  playerAssociations[]
+  gkStats  gkStats[]
+  playerStats  playerStats[]
 
   @@index([name])
 }
 
+model playerAssociations {
+  id       String    @id @default(cuid())
+  idPlayer    Int
+  idTeam      Int
+  idPosition   Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  team    teams   @relation(fields: [idTeam], references: [idApi])
+  player    players   @relation(fields: [idPlayer], references: [idApi])
+  position    positions   @relation(fields: [idPosition], references: [idApi])
+
+  @@index([idPlayer])
+}
+
+model gkStats {
+  id       String    @id @default(cuid())
+  idPlayer    Int
+  overallRating Int
+  skillMoves Int
+  weakFootAbility Int
+  attackingWorkRate Int
+  defensiveWorkRate Int
+  preferredFoot Int
+  gkDiving Int
+  gkHandling Int
+  gkKicking Int
+  gkReflexes Int
+  gkSpeed Int
+  gkPositioning Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  player    players   @relation(fields: [idPlayer], references: [idApi])
+
+  @@index([idPlayer])
+}
+
+model playerStats {
+  id       String    @id @default(cuid())
+  idPlayer    Int
+  overallRating Int
+  skillMoves Int
+  weakFootAbility Int
+  attackingWorkRate Int
+  defensiveWorkRate Int
+  preferredFoot Int
+  pace Int
+  shooting Int
+  passing Int
+  dribbling Int
+  defending Int
+  physicality Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  player    players   @relation(fields: [idPlayer], references: [idApi])
+
+  @@index([idPlayer])
+}
