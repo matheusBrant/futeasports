@@ -1,46 +1,26 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @next/next/no-img-element */
+import { currentUser } from "@clerk/nextjs";
 import { unstable_noStore as noStore } from "next/cache";
-import Link from "next/link";
 
-import { CreatePost } from "~/app/_components/create-post";
 import { api } from "~/trpc/server";
 
+import { UserButton } from "@clerk/nextjs";
+import { type Player } from "~/trpc/models";
+ 
 export default async function Home() {
   noStore();
   const hello = await api.post.hello.query({ text: "from tRPC" });
-
+  const user = await currentUser()
+  
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-        <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-          Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-        </h1>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-            href="https://create.t3.gg/en/usage/first-steps"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">First Steps →</h3>
-            <div className="text-lg">
-              Just the basics - Everything you need to know to set up your
-              database and authentication.
-            </div>
-          </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-            href="https://create.t3.gg/en/introduction"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">Documentation →</h3>
-            <div className="text-lg">
-              Learn more about Create T3 App, the libraries it uses, and how to
-              deploy it.
-            </div>
-          </Link>
+    <>
+      <header>
+        <div className="flex justify-end items-center p-2 bg-purple-200">
+          <h1 className="mr-4">{user?.firstName} {user?.lastName}</h1><UserButton afterSignOutUrl="/" />
         </div>
+      </header>
+      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-8 ">
         <div className="flex flex-col items-center gap-2">
           <p className="text-2xl text-white">
             {hello ? hello.greeting : "Loading tRPC query..."}
@@ -50,21 +30,41 @@ export default async function Home() {
         <CrudShowcase />
       </div>
     </main>
+    </>
   );
 }
 
 async function CrudShowcase() {
-  const latestPost = await api.post.getLatest.query();
+  const taller = await api.player.getTaller.query() as Player;
+  const smaller = await api.player.getSmaller.query() as Player;
 
   return (
-    <div className="w-full max-w-xs">
-      {latestPost ? (
-        <p className="truncate">Your most recent post: {latestPost.name}</p>
-      ) : (
-        <p>You have no posts yet.</p>
-      )}
 
-      <CreatePost />
-    </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="flex-col items-center justify-center">
+          <div className="text-center">
+          {taller ? (
+            <p className="truncate">Taller player: {taller.name}</p>
+          ) : (
+            <p>You have no posts yet.</p>
+          )}
+          </div>
+          <div className="pt-1 flex justify-center items-center">
+            <img src={taller.shieldUrl} alt="Imagem" width={100} height={50}/>
+          </div>
+        </div>
+        <div className="flex-col items-center justify-center">
+          <div className="text-center">
+          {taller ? (
+            <p className="truncate">Smaller player: {smaller.name}</p>
+          ) : (
+            <p>You have no posts yet.</p>
+          )}
+          </div>
+          <div className="pt-1 flex justify-center items-center">
+            <img src={smaller.shieldUrl} alt="Imagem" width={100} height={50}/>
+          </div>
+        </div>
+      </div>
   );
 }
