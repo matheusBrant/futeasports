@@ -1,21 +1,38 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @next/next/no-img-element */
-import { currentUser } from "@clerk/nextjs";
-import { unstable_noStore as noStore } from "next/cache";
+// import { unstable_noStore as noStore } from "next/cache";
 
+import { UserButton, currentUser } from "@clerk/nextjs";
+import { type NextPage } from "next";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "~/components/ui/accordion";
+import { Button } from "~/components/ui/button";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from "~/components/ui/card";
+import { Input } from "~/components/ui/input";
+import { type Player } from "~/trpc/models";
 import { api } from "~/trpc/server";
 
-import { UserButton } from "@clerk/nextjs";
-import { type Player } from "~/trpc/models";
- 
-export default async function Home() {
-  noStore();
-  const hello = await api.post.hello.query({ text: "from tRPC" });
+const Home: NextPage = async () => {  
+  // noStore();
   const user = await currentUser()
-  
+  const getPlayer = await api.player.getByName.query({ name: 'Lionel Messi' }) as Player;
+
   return (
     <>
       <header>
-        <div className="flex justify-end items-center p-2 bg-purple-200">
+        <div className="flex justify-end items-center pr-6 p-3 bg-purple-200">
           <h1 className="mr-4">{user?.firstName} {user?.lastName}</h1><UserButton afterSignOutUrl="/" />
         </div>
       </header>
@@ -23,7 +40,24 @@ export default async function Home() {
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-8 ">
         <div className="flex flex-col items-center gap-2">
           <p className="text-2xl text-white">
-            {hello ? hello.greeting : "Loading tRPC query..."}
+          <Accordion type="single" collapsible>
+            <AccordionItem value="item-1">
+              <AccordionTrigger>Get Player</AccordionTrigger>
+              <AccordionContent>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Show player</CardTitle>
+                    <CardDescription>Insert player name</CardDescription>
+                      <Input placeholder="Name"  type="text"/>
+                      <Button>Button</Button>
+                  </CardHeader>
+                  <div className="m-5 flex justify-center items-center">
+                    <img src={getPlayer[0].shieldUrl} alt="Imagem" width={100} height={50}/>
+                  </div>
+                </Card>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
           </p>
         </div>
 
@@ -40,6 +74,9 @@ async function CrudShowcase() {
 
   return (
 
+    <div>
+      <div className="text-center"> Showroom
+      </div>
       <div className="grid grid-cols-2 gap-4">
         <div className="flex-col items-center justify-center">
           <div className="text-center">
@@ -55,7 +92,7 @@ async function CrudShowcase() {
         </div>
         <div className="flex-col items-center justify-center">
           <div className="text-center">
-          {taller ? (
+          {smaller ? (
             <p className="truncate">Smaller player: {smaller.name}</p>
           ) : (
             <p>You have no posts yet.</p>
@@ -66,5 +103,8 @@ async function CrudShowcase() {
           </div>
         </div>
       </div>
+    </div>
   );
 }
+
+export default Home;
