@@ -12,4 +12,5 @@ export interface Player {
     createdAt: Date
     updatedAt: Date
     idNationality: number
+    0: { shieldUrl: string }
   }
