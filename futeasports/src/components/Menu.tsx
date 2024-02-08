@@ -16,11 +16,11 @@ export const Menu = ({ path, children }: DynamicLinkProps) => {
     return
   }
   return (
-    <Accordion type="single" collapsible className="w-fit">
+    <Accordion type="single" collapsible className="w-full">
       <AccordionItem value="item-1">
-        <AccordionTrigger>Pages</AccordionTrigger>
+        <AccordionTrigger className="text-white">Pages</AccordionTrigger>
         <AccordionContent>
-          <Link href={path}>{children}</Link>
+          <Link className="text-white" href={path}>{children}</Link>
         </AccordionContent>
       </AccordionItem>
     </Accordion>
