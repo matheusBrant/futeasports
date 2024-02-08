@@ -9,43 +9,45 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { api } from "@/utils/api";
 import { useState } from 'react';
 
-export const CardPlayer = () => {
-  const { data } = api.player.getByName.useQuery({ name: 'Vinícius José de Oliveira Júnior' });
-  const [showImage, setShowImage] = useState(false);
+interface DynamicLinkProps {
+  imgLink: string;
+  name: string;
+  rank: number
+  children?: React.ReactNode;
+}
 
-  if (!data) {
-    return
-  }
+export const CardPlayer= ({ imgLink, name, rank }: DynamicLinkProps) => {
+  const [showImage, setShowImage] = useState(false);
 
   const handleSearch = () => {
     setShowImage(!showImage);
   };
 
-  const player = data[0]
   return (
     <div>
-      <Card className="w-[350px]">
+      <Card className="w-[350px] bg-emerald-100 shadow-2xl">
         <CardHeader>
-          <CardTitle>Click to show the best player</CardTitle>
-          <CardDescription>Find out a player card</CardDescription>
+          <CardTitle className="flex items-center justify-center">
+            <span>Rank:</span><span className="ml-1 text-amber-500">{rank}</span>
+          </CardTitle>
+          <CardDescription className="flex items-center justify-center">Revele a carta</CardDescription>
         </CardHeader>
         <CardContent>
           <form>
             <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Name</Label>
+              <div className="flex items-center justify-center">
+                <Label htmlFor="name">{name}</Label>
               </div>
             </div>
           </form>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button className="grid w-full items-center" onClick={handleSearch}>Search</Button>
+          <Button className="grid w-full items-center" onClick={handleSearch}>Revelar</Button>
         </CardFooter>
         <div className={`p-3 flex justify-center items-center ${showImage ? '' : 'hidden'}`}>
-          <img src={player?.shieldUrl} alt="Imagem" width={200} height={100} />
+          <img src={imgLink} alt="Imagem" width={200} height={100} />
         </div>
       </Card>
     </div>
