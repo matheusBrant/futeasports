@@ -15,10 +15,9 @@ interface DynamicLinkProps {
   imgLink: string;
   name: string;
   rank: number
-  children?: React.ReactNode;
 }
 
-export const CardPlayer= ({ imgLink, name, rank }: DynamicLinkProps) => {
+export const CardPlayer = ({ imgLink, name, rank }: DynamicLinkProps) => {
   const [showImage, setShowImage] = useState(false);
 
   const handleSearch = () => {
@@ -48,6 +47,9 @@ export const CardPlayer= ({ imgLink, name, rank }: DynamicLinkProps) => {
         </CardFooter>
         <div className={`p-3 flex justify-center items-center ${showImage ? '' : 'hidden'}`}>
           <img src={imgLink} alt="Imagem" width={200} height={100} />
+        </div>
+        <div className={`p-3 flex justify-center items-center ${!showImage ? '' : 'hidden'}`}>
+          <img src="https://i.ibb.co/Kx76Cp4/image.png" alt="Imagem" width={220} height={120} />
         </div>
       </Card>
     </div>

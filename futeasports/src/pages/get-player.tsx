@@ -1,6 +1,6 @@
+import { CardComparison } from "@/components/CardComparison";
 import { Header } from "@/components/Header";
 import { SideMenu } from "@/components/SideMenu";
-import { CardComparison } from "@/components/CardComparison";
 import { useUser } from '@clerk/clerk-react';
 import { UserButton } from "@clerk/nextjs";
 import Head from "next/head";
@@ -11,6 +11,7 @@ export default function Dashboard() {
   if (!isLoaded || !isSignedIn) {
     return null;
   }
+
   return (
     <>
       <Head>
@@ -23,7 +24,6 @@ export default function Dashboard() {
         <Header />
         <SideMenu path="/">Home</SideMenu>
         <CardComparison />
-
       </main>
     </>
   );
