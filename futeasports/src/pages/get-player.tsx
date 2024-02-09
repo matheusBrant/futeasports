@@ -22,7 +22,7 @@ export default function Dashboard() {
       </Head>
       <main className="h-screen items-center justify-center bg-gradient-to-br from-emerald-600 to-fuchsia-200">
         <Header />
-        <SideMenu path="/">Home</SideMenu>
+        <SideMenu path="/">Principal</SideMenu>
         <CardComparison />
       </main>
     </>

@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -7,22 +6,49 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { useState } from 'react';
+} from "@/components/ui/card"
 
 interface DynamicLinkProps {
-  imgLink: string;
-  name: string;
+  imgLink: string
+  name: string
   rank: number
 }
 
 export const CardPlayer = ({ imgLink, name, rank }: DynamicLinkProps) => {
-  const [showImage, setShowImage] = useState(false);
+  console.log(name, imgLink)
+
+  /* const [form, setForm] = useState({
+    name: ' '
+  })
+  const [player, setPlayer] = useState(null)
+
+  const getInput = (key: string) => {
+    return function (e: ChangeEvent<HTMLInputElement>) {
+      setForm((prev) => ({
+        ...prev,
+        [key]: e.target.value
+      }))
+    }
+  }
 
   const handleSearch = () => {
-    setShowImage(!showImage);
-  };
+    api.player.getByName.useQuery({ name: form.name }, {
+      refetchOnWindowFocus: false,
+      enabled: true,
+      onSuccess: (data) => {
+        if (data) {
+          console.log(data);
+        }
+      }
+    })
+  } */
+
+  /* setPlayer(null)
+  const handleSubmit = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    handleSearch();
+  } */
+
 
   return (
     <div>
@@ -34,26 +60,35 @@ export const CardPlayer = ({ imgLink, name, rank }: DynamicLinkProps) => {
           <CardDescription className="flex items-center justify-center">Revele a carta</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          {/* <form onSubmit={handleSubmit}> 
+            <Input
+              required
+              value={form.name}
+              type="text"
+              onChange={getInput('name')}
+            />
+            <Button
+              type="submit"
+              className='flex-grow text-xl font-bold'>Submit
+            </Button>
             <div className="grid w-full items-center gap-4">
               <div className="flex items-center justify-center">
-                <Label htmlFor="name">{name}</Label>
+                {form.name === ' ' ?
+                  <Label htmlFor="name">{player}</Label> :
+                  <Label htmlFor="name"> </Label>
+                }
               </div>
             </div>
-          </form>
+          </form> */}
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button className="grid w-full items-center" onClick={handleSearch}>Revelar</Button>
         </CardFooter>
-        <div className={`p-3 flex justify-center items-center ${showImage ? '' : 'hidden'}`}>
-          <img src={imgLink} alt="Imagem" width={200} height={100} />
-        </div>
-        <div className={`p-3 flex justify-center items-center ${!showImage ? '' : 'hidden'}`}>
+        <div className={`p-3 flex justify-center items-center`}>
           <img src="https://i.ibb.co/Kx76Cp4/image.png" alt="Imagem" width={220} height={120} />
         </div>
       </Card>
     </div>
-  );
+  )
 }
 
-export default CardPlayer;
+export default CardPlayer

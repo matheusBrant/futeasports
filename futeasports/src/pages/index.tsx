@@ -1,6 +1,4 @@
 import { Header } from "@/components/Header";
-import { Test } from "@/components/Test";
-
 import { SideMenu } from "@/components/SideMenu";
 import Head from "next/head";
 
@@ -15,8 +13,7 @@ export default function Home() {
       </Head>
       <main className="h-screen items-center justify-center bg-gradient-to-br from-cyan-100 to-cyan-600">
         <Header />
-        <SideMenu path="/get-player">Get Player</SideMenu>
-        <Test />
+        <SideMenu path="/get-player">Comparar jogador</SideMenu>
       </main>
     </>
   );
