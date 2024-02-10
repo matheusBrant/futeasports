@@ -6,85 +6,68 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
+import { api, type RouterOutputs } from "@/utils/api";
+import Image from "next/image";
+import { useState } from "react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 
-interface DynamicLinkProps {
-  imgLink: string
-  name: string
-  rank: number
-}
+export const CardPlayer = () => {
+  type Player = RouterOutputs["player"]["getByName"]
 
-export const CardPlayer = ({ imgLink, name, rank }: DynamicLinkProps) => {
-  console.log(name, imgLink)
+  const [value, setValue] = useState('');
+  const [data, setData] = useState<Player>();
 
-  /* const [form, setForm] = useState({
-    name: ' '
-  })
-  const [player, setPlayer] = useState(null)
+  const handleClick = async () => {
+    const newData = await refetch()
+    setData(newData.data);
+  };
 
-  const getInput = (key: string) => {
-    return function (e: ChangeEvent<HTMLInputElement>) {
-      setForm((prev) => ({
-        ...prev,
-        [key]: e.target.value
-      }))
-    }
+  if (value === '') {
+    setValue('  ')
   }
 
-  const handleSearch = () => {
-    api.player.getByName.useQuery({ name: form.name }, {
-      refetchOnWindowFocus: false,
-      enabled: true,
-      onSuccess: (data) => {
-        if (data) {
-          console.log(data);
-        }
-      }
-    })
-  } */
+  const { refetch } = api.player.getByName.useQuery({ name: value }, {
+    refetchOnWindowFocus: false,
+    enabled: false,
+  });
+  console.log(data);
 
-  /* setPlayer(null)
-  const handleSubmit = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    handleSearch();
-  } */
-
+  if (!refetch) {
+    return (<div>..Loading</div>)
+  }
 
   return (
     <div>
       <Card className="w-[350px] bg-emerald-100 shadow-2xl">
         <CardHeader>
           <CardTitle className="flex items-center justify-center">
-            <span>Rank:</span><span className="ml-1 text-amber-500">{rank}</span>
+            Digite o nome completo
           </CardTitle>
           <CardDescription className="flex items-center justify-center">Revele a carta</CardDescription>
         </CardHeader>
         <CardContent>
-          {/* <form onSubmit={handleSubmit}> 
-            <Input
-              required
-              value={form.name}
-              type="text"
-              onChange={getInput('name')}
-            />
-            <Button
-              type="submit"
-              className='flex-grow text-xl font-bold'>Submit
-            </Button>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex items-center justify-center">
-                {form.name === ' ' ?
-                  <Label htmlFor="name">{player}</Label> :
-                  <Label htmlFor="name"> </Label>
-                }
-              </div>
-            </div>
-          </form> */}
+          <Input className="w-full flex"
+            type="text"
+            value={value}
+            onChange={(e) => {
+              setValue(e.currentTarget.value.trimLeft())
+            }}
+          />
+          <Button
+            disabled={value.trim() === ''}
+            onClick={handleClick}
+            className='mt-2 flex-grow w-full text-xl font-bold'>Buscar
+          </Button>
         </CardContent>
         <CardFooter className="flex justify-between">
         </CardFooter>
+        <CardTitle className="flex items-center justify-center">
+          <span>Rank:</span><span className="ml-1 text-amber-500">{data?.[0]?.rank ?? '?'}</span>
+        </CardTitle>
         <div className={`p-3 flex justify-center items-center`}>
-          <img src="https://i.ibb.co/Kx76Cp4/image.png" alt="Imagem" width={220} height={120} />
+          <Image src={data?.[0]?.shieldUrl ?? 'https://i.ibb.co/Kx76Cp4/image.png'} alt="Imagem" width={200} height={100} />
         </div>
       </Card>
     </div>
