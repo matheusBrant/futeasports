@@ -8,13 +8,13 @@ export const playerRouter = createTRPCRouter({
     const { name } = input;
 
     const players = await ctx.db.players.findMany({
-      take: 1,
+      take: 5,
       where: {
         name: {
           contains: name
         }
       },
-      orderBy: { rank: "asc" },
+      orderBy: { overallRating: "desc" },
     });
     if (!players) {
       throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });

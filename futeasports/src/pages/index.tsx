@@ -1,8 +1,12 @@
 import { Header } from "@/components/Header";
 import { SideMenu } from "@/components/SideMenu";
+import { Button } from "@/components/ui/button";
 import Head from "next/head";
+import { useState } from "react";
+import { Menu } from 'react-feather';
 
 export default function Home() {
+  const [sideMenuVisible, setSideMenuVisible] = useState(true);
 
   return (
     <>
@@ -12,8 +16,14 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="h-screen items-center justify-center bg-gradient-to-br from-cyan-100 to-cyan-600">
+        <Button className=" bg-transparent absolute ml-48 w-12h-10" onClick={() => setSideMenuVisible(!sideMenuVisible)}>
+          <Menu size={16} />
+          {sideMenuVisible ? '' : ''}
+        </Button>
         <Header />
-        <SideMenu path="/get-player">Comparar jogador</SideMenu>
+        {sideMenuVisible && (
+          <SideMenu path="/get-player">Comparar jogador</SideMenu>
+        )}
       </main>
     </>
   );
