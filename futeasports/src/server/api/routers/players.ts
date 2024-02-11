@@ -10,8 +10,16 @@ export const playerRouter = createTRPCRouter({
     const players = await ctx.db.players.findMany({
       take: 5,
       where: {
-        name: {
-          contains: name
+        OR: [
+          { name: { contains: name, mode: 'insensitive' } },
+          { commonName: { contains: name, mode: 'insensitive' } }
+        ]
+      },
+      include: {
+        position: {
+          select: {
+            shortName: true
+          }
         }
       },
       orderBy: { overallRating: "desc" },

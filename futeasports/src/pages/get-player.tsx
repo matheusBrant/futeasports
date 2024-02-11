@@ -27,7 +27,7 @@ export default function Dashboard() {
       <main className="md:h-screen items-center justify-center bg-gradient-to-br from-emerald-600 to-fuchsia-200">
         <Button className="bg-transparent absolute ml-48 w-12 h-10" onClick={() => setSideMenuVisible(!sideMenuVisible)}>
           <Menu size={24} /> 
-          {sideMenuVisible ? '' : ''}
+          {sideMenuVisible}
         </Button>
         <Header />
         {sideMenuVisible && (
