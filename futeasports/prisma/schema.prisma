@@ -1,0 +1,126 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model positions {
+    id        String  @id @default(cuid())
+    idApi     Int @unique
+
+    name      String
+    shortName      String
+    
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    deletedAt DateTime?
+
+    players  players[]
+
+    @@index([name])
+}
+
+model nationalities {
+    id        String  @id @default(cuid())
+    idApi     Int @unique
+
+    name      String
+    imageUrl  String
+    isPopular  Boolean
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    deletedAt DateTime?
+
+    players  players[]
+    leagues     leagues[]
+
+    @@index([name])
+}
+
+model leagues {
+  id        String    @id @default(cuid())
+  idApi     Int @unique
+
+  name      String
+  idRegion  Int
+  isPopular Boolean
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  teams     teams[]
+  nationalities    nationalities   @relation(fields: [idRegion], references: [idApi])
+
+  @@index([name])
+}
+
+model teams {
+  id        String    @id @default(cuid())
+  idApi     Int @unique
+  idLeague  Int
+
+  name      String
+  imageUrl  String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  league    leagues   @relation(fields: [idLeague], references: [idApi])
+  players  players[]
+
+  @@index([name])
+}
+
+model players {
+  id   String    @id @default(cuid())
+  idApi    Int @unique
+  idPosition   Int
+  idTeam Int
+  idNationality  Int
+
+  rank     Int
+  name      String
+  commonName   String?
+  birthdate    String
+  height  Int
+  weight  Int
+  avatarUrl   String
+  shieldUrl   String
+  overallRating Int
+  skillMoves Int
+  weakFootAbility Int
+  attackingWorkRate Int
+  defensiveWorkRate Int
+  preferredFoot Int
+
+  pace Int // gkDiving Int
+  shooting Int // gkHandling Int
+  passing Int // gkKicking Int
+  dribbling Int // gkReflexes Int
+  defending Int // gkSpeed Int
+  physicality Int // gkPositioning Int
+
+  isGk Boolean
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  nationality    nationalities   @relation(fields: [idNationality], references: [idApi])
+  team    teams   @relation(fields: [idTeam], references: [idApi])
+  position    positions   @relation(fields: [idPosition], references: [idApi])
+
+  @@index([name])
+  @@index([idPosition, idNationality])
+
+}

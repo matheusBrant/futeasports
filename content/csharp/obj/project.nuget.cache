@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "2u4L2xjbxQYesiT62ZI1N47X4YRBnGVQiQCcrdmZEq6OoJYJ180EmLMxP3Sb+eGd91PGpED4QIbJxg4q64XIgQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Milton\\Documents\\Repositorio\\Projetos\\futeasports\\csharp\\csharp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Milton\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "C:\\Users\\Milton\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\Milton\\.nuget\\packages\\swashbuckle.aspnetcore\\6.4.0\\swashbuckle.aspnetcore.6.4.0.nupkg.sha512",
+    "C:\\Users\\Milton\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.4.0\\swashbuckle.aspnetcore.swagger.6.4.0.nupkg.sha512",
+    "C:\\Users\\Milton\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.4.0\\swashbuckle.aspnetcore.swaggergen.6.4.0.nupkg.sha512",
+    "C:\\Users\\Milton\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.4.0\\swashbuckle.aspnetcore.swaggerui.6.4.0.nupkg.sha512"
+  ],
+  "logs": []
+}

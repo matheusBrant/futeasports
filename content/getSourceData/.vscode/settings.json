@@ -1,0 +1,20 @@
+{
+    "workbench.iconTheme": "vscode-icons",
+    "workbench.colorTheme": "Dracula",
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true,
+        "source.fixAll.eslint": true,
+        "source.organizeImports": "explicit"
+    },
+    "editor.tabFocusMode": false,
+    "explorer.compactFolders": false,
+    "workbench.colorCustomizations": {
+
+        "tab.activeBackground": "#2b4148"
+    },
+    "editor.wordWrap": "on",
+    "editor.wordWrapColumn": 100,
+    "files.refactoring.autoSave": false,
+    "standard.enable": true,
+    "files.autoSave": "off"
+}
