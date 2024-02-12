@@ -16,9 +16,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="h-screen items-center justify-center bg-gradient-to-br from-cyan-100 to-cyan-600">
-        <Button className=" bg-transparent absolute ml-48 w-12h-10" onClick={() => setSideMenuVisible(!sideMenuVisible)}>
-          <Menu size={16} />
-          {sideMenuVisible ? '' : ''}
+        <Button className="absolute left-48 top-0 bg-transparent w-16 h-14 hover:bg-transparent" 
+          onClick={() => setSideMenuVisible(!sideMenuVisible)} >
+          <Menu size={24} /> 
         </Button>
         <Header />
         {sideMenuVisible && (

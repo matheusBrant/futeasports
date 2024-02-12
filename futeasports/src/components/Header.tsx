@@ -9,7 +9,10 @@ export const Header = () => {
   return (
     <>
       <header>
-        <div className="shadow-sm shadow-fuchsia-100 flex justify-end items-center pr-6 p-3 bg-neutral-800">
+        <div className="shadow-xl flex justify-end items-center pr-6 p-3 bg-neutral-800">
+          <div className="bg-zinc-900	w-48 h-14 p-4 text-center absolute left-0 top-0">
+            <h1 className="text-white">Fut Easports</h1>
+          </div>
           <h1 className="mr-4 text-white">{user?.firstName} {user?.lastName}</h1><UserButton afterSignOutUrl="/" />
         </div>
       </header>
