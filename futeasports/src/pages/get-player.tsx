@@ -10,7 +10,7 @@ import { Menu } from 'react-feather';
 
 export default function Dashboard() {
   const { isLoaded, isSignedIn } = useUser();
-  const [sideMenuVisible, setSideMenuVisible] = useState(true);
+  const [sideMenuVisible, setSideMenuVisible] = useState(false);
 
   if (!isLoaded || !isSignedIn) {
     return null;
