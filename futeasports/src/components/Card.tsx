@@ -17,7 +17,8 @@ import { useState } from "react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import { FaLightbulb } from 'react-icons/fa';
-import { FiActivity } from 'react-icons/fi';
+import { FiTrendingUp  } from 'react-icons/fi';
+import { GiSoccerKick } from 'react-icons/gi';
 
 type Player = RouterOutputs["player"]["getByName"][number]
 
@@ -197,21 +198,21 @@ export const Compare = () => {
   const realName2 = player2.commonName ?? player2.name
   
   const playerPace = player1.pace > player2.pace ? 
-    <div><FiActivity size={10} className="text-yellow-500 mr-2"/><h1><strong>{realName1}</strong> é mais veloz que <strong>{realName2}</strong></h1></div> :
-    <div><FiActivity size={10} className="text-yellow-500 mr-2"/><h1><strong>{realName2}</strong> é mais veloz que <strong>{realName1}</strong></h1></div>
+    <div><FiTrendingUp  size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName1}</strong> é mais veloz que <strong>{realName2}</strong></h1></div> :
+    <div><FiTrendingUp  size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName2}</strong> é mais veloz que <strong>{realName1}</strong></h1></div>
   
   const playerShooting = player1.shooting > player2.shooting ? 
-    <h1><strong> - {realName1}</strong> finaliza melhor que <strong>{realName2}</strong></h1> :
-    <h1><strong> - {realName2}</strong> finaliza melhor que <strong>{realName1}</strong></h1>
+    <div><GiSoccerKick size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName1}</strong> finaliza melhor que <strong>{realName2}</strong></h1></div> :
+    <div><GiSoccerKick size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName2}</strong> finaliza melhor que <strong>{realName1}</strong></h1></div>
  
   return (
     <Popover >
       <PopoverTrigger asChild>
         <Button className="bg-emerald-100 shadow-xl" 
         variant="outline"><FaLightbulb size={24} className="text-yellow-500 mr-2"/>
-        {player1.name ?? ''} vs {player2.name ?? ''}</Button>
+        {realName1} vs {realName2}</Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto bg-emerald-200">
+      <PopoverContent className="w-auto">
         <div className="grid gap-4">
           {playerPace}
           {playerShooting}
