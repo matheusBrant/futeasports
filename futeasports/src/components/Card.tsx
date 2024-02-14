@@ -16,8 +16,6 @@ import Image from "next/image"
 import { useState } from "react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
-import { FaLightbulb } from 'react-icons/fa';
-import { FiTrendingUp  } from 'react-icons/fi';
 import { GiSoccerKick } from 'react-icons/gi';
 
 type Player = RouterOutputs["player"]["getByName"][number]
