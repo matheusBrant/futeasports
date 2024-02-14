@@ -1,3 +1,4 @@
+import { Loading } from "@/components/Loading"
 import {
   Card,
   CardContent,
@@ -15,17 +16,17 @@ import Image from "next/image"
 import { useState } from "react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
-import { Loading } from "@/components/Loading"
+import { FaLightbulb } from 'react-icons/fa';
+import { FiActivity } from 'react-icons/fi';
 
-
-type Player = RouterOutputs["player"]["getByName"]
+type Player = RouterOutputs["player"]["getByName"][number]
 
 let dataComparison: Player[] = []
 
 export const CardPlayer = () => {
 
   const [value, setValue] = useState('')
-  const [data, setData] = useState<Player>()
+  const [data, setData] = useState<Player[]>()
   const [selectedPlayerImageUrl, setSelectedPlayerImageUrl] = useState<string | null>(null)
   const [selectedPlayerRank, setSelectedPlayerRank] = useState<number | null>(null)
   const [selectedPlayerSkillMoves, setSelectedPlayerSkillMoves] = useState<number | null>(null)
@@ -39,7 +40,7 @@ export const CardPlayer = () => {
     setLoading(true);
     setPopoverVisible(true)
     const newData = await refetch()
-    
+
     setData(newData.data)
     setLoading(false)
   }
@@ -91,26 +92,17 @@ export const CardPlayer = () => {
                   <div className="w-full">
                     <ul>
                       {loading ? <Loading /> : (
-                        data?.map(item => (
+                        data?.map((item: Player) => (
                           <li style={{ cursor: 'pointer' }} className="border-b-2 flex" key={item.id} onClick={() => {
-                            console.log(selectedPlayerSkillMoves)
-
                             setIdPlayer(item.id);
                             setSelectedPlayerImageUrl(item.shieldUrl);
                             setSelectedPlayerRank(item.rank);
                             setSelectedPlayerSkillMoves(item.skillMoves);
                             setSelectedPlayerWeakFoot(item.weakFootAbility);
                             setPopoverVisible(false);
-
-                            /* eslint-disable */
-                            // @ts-ignore
+                           
                             dataComparison = dataComparison.filter((item: Player) => item.id !== idPlayer)
-                            // @ts-ignore
                             dataComparison.push(item);
-                            console.log(dataComparison);
-                            /* eslint-enable */
-
-                            
                           }}>
                             <p><Image src={item.avatarUrl} alt="Imagem" width={50} height={25} /></p>
                             <p className="ml-2 border-b-2 italic p-3 text-center">{item.position.shortName}</p>
@@ -159,8 +151,11 @@ export const CardPlayer = () => {
           </div>
         </CardContent>
       </Card>
-      <Compare compare={dataComparison}/>
+      <div className="m-5 flex justify-center items-center">
+        {dataComparison[0] && dataComparison[1] ? <Compare/> : <Compare/>}
+      </div>
     </div>
+    
   )
 }
 
@@ -187,20 +182,41 @@ const StarRating = (props: { rating: number }) => {
   )
 }
 
-const Compare = (props: { compare: Player[] }) => {
-  /* eslint-disable */
-  // @ts-ignore
-  const data: Player = props.compare[0] 
-  // @ts-ignore
-  const data2: Player = props.compare[1]
+export const Compare = () => {
+  if (dataComparison.length !== 2) {
+    return null;
+  }
 
-  return (                      
-    <div>
-      {/* @ts-ignore */}
-      <h1>{data?.name ?? 'a'}</h1> 
-      {/* @ts-ignore */}
-      <h1>{data2?.name ?? 'a'}</h1>  
-    </div>
+  const [player1, player2] = dataComparison;
+
+  if (!player1 || !player2) {
+    return null
+  }
+
+  const realName1 = player1.commonName ?? player1.name
+  const realName2 = player2.commonName ?? player2.name
+  
+  const playerPace = player1.pace > player2.pace ? 
+    <div><FiActivity size={10} className="text-yellow-500 mr-2"/><h1><strong>{realName1}</strong> é mais veloz que <strong>{realName2}</strong></h1></div> :
+    <div><FiActivity size={10} className="text-yellow-500 mr-2"/><h1><strong>{realName2}</strong> é mais veloz que <strong>{realName1}</strong></h1></div>
+  
+  const playerShooting = player1.shooting > player2.shooting ? 
+    <h1><strong> - {realName1}</strong> finaliza melhor que <strong>{realName2}</strong></h1> :
+    <h1><strong> - {realName2}</strong> finaliza melhor que <strong>{realName1}</strong></h1>
+ 
+  return (
+    <Popover >
+      <PopoverTrigger asChild>
+        <Button className="bg-emerald-100 shadow-xl" 
+        variant="outline"><FaLightbulb size={24} className="text-yellow-500 mr-2"/>
+        {player1.name ?? ''} vs {player2.name ?? ''}</Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto bg-emerald-200">
+        <div className="grid gap-4">
+          {playerPace}
+          {playerShooting}
+        </div>
+      </PopoverContent>
+    </Popover>
   )
-  /* eslint-enable */
 }
