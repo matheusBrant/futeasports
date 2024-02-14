@@ -198,8 +198,8 @@ export const Compare = () => {
   const realName2 = player2.commonName ?? player2.name
   
   const playerPace = player1.pace > player2.pace ? 
-    <div><FiTrendingUp  size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName1}</strong> é mais veloz que <strong>{realName2}</strong></h1></div> :
-    <div><FiTrendingUp  size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName2}</strong> é mais veloz que <strong>{realName1}</strong></h1></div>
+    <div><GiSoccerKick  size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName1}</strong> é mais veloz que <strong>{realName2}</strong></h1></div> :
+    <div><GiSoccerKick  size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName2}</strong> é mais veloz que <strong>{realName1}</strong></h1></div>
   
   const playerShooting = player1.shooting > player2.shooting ? 
     <div><GiSoccerKick size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName1}</strong> finaliza melhor que <strong>{realName2}</strong></h1></div> :
@@ -209,7 +209,7 @@ export const Compare = () => {
     <Popover >
       <PopoverTrigger asChild>
         <Button className="bg-emerald-100 shadow-xl" 
-        variant="outline"><FaLightbulb size={24} className="text-yellow-500 mr-2"/>
+        variant="outline"><GiSoccerKick size={24} className="text-yellow-500 mr-2"/>
         {realName1} vs {realName2}</Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto">
