@@ -1,3 +1,4 @@
+import { Loading } from "@/components/Loading"
 import {
   Card,
   CardContent,
@@ -15,16 +16,21 @@ import Image from "next/image"
 import { useState } from "react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
+import { Star  } from 'react-feather';
+
+type Player = RouterOutputs["player"]["getByName"][number]
+
+let dataComparison: Player[] = []
 
 export const CardPlayer = () => {
-  type Player = RouterOutputs["player"]["getByName"]
 
   const [value, setValue] = useState('')
-  const [data, setData] = useState<Player>()
+  const [data, setData] = useState<Player[]>()
   const [selectedPlayerImageUrl, setSelectedPlayerImageUrl] = useState<string | null>(null)
   const [selectedPlayerRank, setSelectedPlayerRank] = useState<number | null>(null)
   const [selectedPlayerSkillMoves, setSelectedPlayerSkillMoves] = useState<number | null>(null)
   const [selectedPlayerWeakFoot, setSelectedPlayerWeakFoot] = useState<number | null>(null)
+  const [idPlayer, setIdPlayer] = useState<string | null>(null)
 
   const [popoverVisible, setPopoverVisible] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -33,6 +39,7 @@ export const CardPlayer = () => {
     setLoading(true);
     setPopoverVisible(true)
     const newData = await refetch()
+
     setData(newData.data)
     setLoading(false)
   }
@@ -84,13 +91,17 @@ export const CardPlayer = () => {
                   <div className="w-full">
                     <ul>
                       {loading ? <Loading /> : (
-                        data?.map(item => (
+                        data?.map((item: Player) => (
                           <li style={{ cursor: 'pointer' }} className="border-b-2 flex" key={item.id} onClick={() => {
+                            setIdPlayer(item.id);
                             setSelectedPlayerImageUrl(item.shieldUrl);
                             setSelectedPlayerRank(item.rank);
                             setSelectedPlayerSkillMoves(item.skillMoves);
                             setSelectedPlayerWeakFoot(item.weakFootAbility);
                             setPopoverVisible(false);
+                           
+                            dataComparison = dataComparison.filter((item: Player) => item.id !== idPlayer)
+                            dataComparison.push(item);
                           }}>
                             <p><Image src={item.avatarUrl} alt="Imagem" width={50} height={25} /></p>
                             <p className="ml-2 border-b-2 italic p-3 text-center">{item.position.shortName}</p>
@@ -139,7 +150,11 @@ export const CardPlayer = () => {
           </div>
         </CardContent>
       </Card>
+      <div className="m-5 flex justify-center items-center">
+        {dataComparison[0] && dataComparison[1] ? <Compare/> : <Compare/>}
+      </div>
     </div>
+    
   )
 }
 
@@ -166,14 +181,41 @@ const StarRating = (props: { rating: number }) => {
   )
 }
 
-const Loading = () => {
+export const Compare = () => {
+  if (dataComparison.length !== 2) {
+    return null;
+  }
+
+  const [player1, player2] = dataComparison;
+
+  if (!player1 || !player2) {
+    return null
+  }
+
+  const realName1 = player1.commonName ?? player1.name
+  const realName2 = player2.commonName ?? player2.name
+  
+  const playerPace = player1.pace > player2.pace ? 
+    <div><Star size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName1}</strong> é mais veloz que <strong>{realName2}</strong></h1></div> :
+    <div><Star size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName2}</strong> é mais veloz que <strong>{realName1}</strong></h1></div>
+  
+  const playerShooting = player1.shooting > player2.shooting ? 
+    <div><Star size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName1}</strong> finaliza melhor que <strong>{realName2}</strong></h1></div> :
+    <div><Star size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName2}</strong> finaliza melhor que <strong>{realName1}</strong></h1></div>
+ 
   return (
-    <div className="flex items-center justify-center">
-      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-slate" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-      </svg>
-    </div>
-    
+    <Popover >
+      <PopoverTrigger asChild>
+        <Button className="bg-emerald-100 shadow-xl" 
+        variant="outline"><Star size={24} className="text-yellow-500 mr-2"/>
+        {realName1} vs {realName2}</Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto">
+        <div className="grid gap-4">
+          {playerPace}
+          {playerShooting}
+        </div>
+      </PopoverContent>
+    </Popover>
   )
 }

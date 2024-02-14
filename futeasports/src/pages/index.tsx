@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Menu } from 'react-feather';
 
 export default function Home() {
-  const [sideMenuVisible, setSideMenuVisible] = useState(true);
+  const [sideMenuVisible, setSideMenuVisible] = useState(false);
 
   return (
     <>
