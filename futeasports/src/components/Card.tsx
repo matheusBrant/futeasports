@@ -14,9 +14,9 @@ import {
 import { api, type RouterOutputs } from "@/utils/api"
 import Image from "next/image"
 import { useState } from "react"
+import { FaLightbulb } from "react-icons/fa"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
-import { Star  } from 'react-feather';
 
 type Player = RouterOutputs["player"]["getByName"][number]
 
@@ -99,7 +99,7 @@ export const CardPlayer = () => {
                             setSelectedPlayerSkillMoves(item.skillMoves);
                             setSelectedPlayerWeakFoot(item.weakFootAbility);
                             setPopoverVisible(false);
-                           
+
                             dataComparison = dataComparison.filter((item: Player) => item.id !== idPlayer)
                             dataComparison.push(item);
                           }}>
@@ -136,7 +136,7 @@ export const CardPlayer = () => {
         <CardContent className="grid grid-cols-2 gap-4 w-full">
           <CardTitle className="italic text-sm flex items-center justify-center ">Habilidade</CardTitle>
           <div className="flex justify-center items-center rounded border-dashed border border-green-400 p-2">
-            {selectedPlayerSkillMoves ? <StarRating rating={selectedPlayerSkillMoves} /> :
+            {selectedPlayerSkillMoves ? <StarRating max={5} rating={selectedPlayerSkillMoves} /> :
               <h1 className="ml-1 text-amber-500">?</h1>
             }
           </div>
@@ -144,25 +144,23 @@ export const CardPlayer = () => {
             Perna ruim
           </CardTitle>
           <div className="flex justify-center items-center rounded border-dashed border border-green-400 p-2">
-            {selectedPlayerWeakFoot ? <StarRating rating={selectedPlayerWeakFoot} /> :
+            {selectedPlayerWeakFoot ? <StarRating max={5} rating={selectedPlayerWeakFoot} /> :
               <h1 className="ml-1 text-amber-500">?</h1>
             }
           </div>
         </CardContent>
       </Card>
       <div className="m-5 flex justify-center items-center">
-        {dataComparison[0] && dataComparison[1] ? <Compare/> : <Compare/>}
+        {dataComparison[0] && dataComparison[1] ? <Compare /> : <Compare />}
       </div>
     </div>
-    
+
   )
 }
 
 
-const StarRating = (props: { rating: number }) => {
-  const maxStars = 5
-
-  const renderStars = (numStars: number) => {
+const StarRating = (props: { max: number, rating: number }) => {
+  const renderStars = (maxStars: number, numStars: number) => {
     const stars = []
     for (let i = 0; i < maxStars; i++) {
       if (i < numStars) {
@@ -176,7 +174,7 @@ const StarRating = (props: { rating: number }) => {
 
   return (
     <div>
-      {renderStars(props.rating)}
+      {renderStars(props.max, props.rating)}
     </div>
   )
 }
@@ -194,28 +192,86 @@ export const Compare = () => {
 
   const realName1 = player1.commonName ?? player1.name
   const realName2 = player2.commonName ?? player2.name
-  
-  const playerPace = player1.pace > player2.pace ? 
-    <div><Star size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName1}</strong> é mais veloz que <strong>{realName2}</strong></h1></div> :
-    <div><Star size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName2}</strong> é mais veloz que <strong>{realName1}</strong></h1></div>
-  
-  const playerShooting = player1.shooting > player2.shooting ? 
-    <div><Star size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName1}</strong> finaliza melhor que <strong>{realName2}</strong></h1></div> :
-    <div><Star size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName2}</strong> finaliza melhor que <strong>{realName1}</strong></h1></div>
- 
+
+  const atkCombo: number[] = []
+  const workRate = player1.attackingWorkRate > player2.attackingWorkRate ? 1 : player1.attackingWorkRate < player2.attackingWorkRate ? 2 : 0;
+  const weakFoot = player1.weakFootAbility > player2.weakFootAbility ? 1 : player1.weakFootAbility < player2.weakFootAbility ? 2 : 0;
+  const shootingRate = player1.shooting > player2.shooting ? 1 : player1.shooting < player2.shooting ? 2 : 0;
+  const paceRate = player1.pace > player2.pace ? 1 : player1.pace < player2.pace ? 2 : 0;
+  const skillRate = player1.skillMoves > player2.skillMoves ? 1 : player1.skillMoves < player2.skillMoves ? 2 : 0;
+
+  atkCombo.push(workRate, weakFoot, shootingRate, paceRate, skillRate);
+
+  const player1Atk = countValues(atkCombo, 1);
+  const player2Atk = countValues(atkCombo, 2);
+  const equalsAtk = countValues(atkCombo, 0);
+
+  const atkSkill = textComparison(realName1, realName2, player1Atk, player2Atk, equalsAtk, 'ofensivas')
+
+  const midCombo: number[] = []
+  const passRate = player1.passing > player2.passing ? 1 : player1.passing < player2.passing ? 2 : 0;
+  const dribblingRate = player1.dribbling > player2.dribbling ? 1 : player1.dribbling < player2.dribbling ? 2 : 0;
+  const defWorkRate = player1.defensiveWorkRate > player2.defensiveWorkRate ? 1 : player1.defensiveWorkRate < player2.defensiveWorkRate ? 2 : 0;
+  const defRate = player1.defending > player2.defending ? 1 : player1.defending < player2.defending ? 2 : 0;
+
+  midCombo.push(passRate, defRate, dribblingRate, defWorkRate, skillRate);
+
+  const player1mid = countValues(midCombo, 1);
+  const player2mid = countValues(midCombo, 2);
+  const equalsMid = countValues(midCombo, 0);
+
+  console.log(player1mid, player2mid, equalsMid);
+
+
+  const midSkill = textComparison(realName1, realName2, player1mid, player2mid, equalsMid, 'meio campistas')
+
+  const defCombo: number[] = []
+  const phyRate = player1.physicality > player2.physicality ? 1 : player1.physicality < player2.physicality ? 2 : 0;
+  const heightRate = player1.height > player2.height ? 1 : player1.height < player2.height ? 2 : 0;
+  const weightRate = player1.weight > player2.weight ? 1 : player1.weight < player2.weight ? 2 : 0;
+
+  defCombo.push(phyRate, defRate, defWorkRate, heightRate, weightRate);
+
+  const player1def = countValues(defCombo, 1);
+  const player2def = countValues(defCombo, 2);
+  const equalsDef = countValues(defCombo, 0);
+
+  const defSkill = textComparison(realName1, realName2, player1def, player2def, equalsDef, 'defensivas')
+
   return (
     <Popover >
       <PopoverTrigger asChild>
-        <Button className="bg-emerald-100 shadow-xl" 
-        variant="outline"><Star size={24} className="text-yellow-500 mr-2"/>
-        {realName1} vs {realName2}</Button>
+        <Button className="bg-emerald-100 shadow-xl"
+          variant="outline"><FaLightbulb size={14} className="text-yellow-500 mr-2" />
+          {realName1} vs {realName2}</Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto">
-        <div className="grid gap-4">
-          {playerPace}
-          {playerShooting}
+      <PopoverContent className="md:w-full sm:w-52">
+        <div className="flex flex-col">
+          <div className="border-b">{atkSkill}</div>
+          <div className="border-b">{midSkill}</div>
+          <div className="border-b">{defSkill}</div>
         </div>
       </PopoverContent>
     </Popover>
   )
+}
+
+const countValues = (array: number[], value: number) => {
+  return array.filter(item => item === value).length
+}
+
+const textComparison = (realName1: string, realName2: string, player1combo: number, player2combo: number, equalscombo: number, type: string) => {
+  let comboSkill = <h1><strong>{realName1}</strong> tem características ofensivas melhores que <strong>{realName2}</strong></h1>;
+  if (player1combo === player2combo || equalscombo === 5) {
+    comboSkill = <h1><strong>{realName1}</strong> e <strong>{realName2}</strong> têm características <strong>{type}</strong> equilibradas</h1>;
+  } else if (player1combo > player2combo + 3) {
+    comboSkill = <h1><strong>{realName1}</strong> tem características <strong>{type}</strong> muito melhores que <strong>{realName2}</strong></h1>;
+  } else if (player2combo > player1combo + 3) {
+    comboSkill = <h1><strong>{realName2}</strong> tem características <strong>{type}</strong> muito melhores que <strong>{realName1}</strong></h1>;
+  } else if (player1combo > player2combo) {
+    comboSkill = <h1><strong>{realName1}</strong> tem características <strong>{type}</strong> melhores que <strong>{realName2}</strong></h1>;
+  } else if (player2combo > player1combo) {
+    comboSkill = <h1><strong>{realName2}</strong> tem características <strong>{type}</strong> melhores que <strong>{realName1}</strong></h1>;
+  }
+  return comboSkill
 }
