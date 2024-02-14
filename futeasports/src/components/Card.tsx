@@ -16,7 +16,7 @@ import Image from "next/image"
 import { useState } from "react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
-import { GiSoccerKick } from 'react-icons/gi';
+import { Star  } from 'react-feather';
 
 type Player = RouterOutputs["player"]["getByName"][number]
 
@@ -196,18 +196,18 @@ export const Compare = () => {
   const realName2 = player2.commonName ?? player2.name
   
   const playerPace = player1.pace > player2.pace ? 
-    <div><GiSoccerKick  size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName1}</strong> é mais veloz que <strong>{realName2}</strong></h1></div> :
-    <div><GiSoccerKick  size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName2}</strong> é mais veloz que <strong>{realName1}</strong></h1></div>
+    <div><Star size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName1}</strong> é mais veloz que <strong>{realName2}</strong></h1></div> :
+    <div><Star size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName2}</strong> é mais veloz que <strong>{realName1}</strong></h1></div>
   
   const playerShooting = player1.shooting > player2.shooting ? 
-    <div><GiSoccerKick size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName1}</strong> finaliza melhor que <strong>{realName2}</strong></h1></div> :
-    <div><GiSoccerKick size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName2}</strong> finaliza melhor que <strong>{realName1}</strong></h1></div>
+    <div><Star size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName1}</strong> finaliza melhor que <strong>{realName2}</strong></h1></div> :
+    <div><Star size={14} className="text-yellow-500 mr-2"/><h1><strong>{realName2}</strong> finaliza melhor que <strong>{realName1}</strong></h1></div>
  
   return (
     <Popover >
       <PopoverTrigger asChild>
         <Button className="bg-emerald-100 shadow-xl" 
-        variant="outline"><GiSoccerKick size={24} className="text-yellow-500 mr-2"/>
+        variant="outline"><Star size={24} className="text-yellow-500 mr-2"/>
         {realName1} vs {realName2}</Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto">
