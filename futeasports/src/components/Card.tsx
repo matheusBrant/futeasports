@@ -15,6 +15,9 @@ import { api, type RouterOutputs } from "@/utils/api"
 import Image from "next/image"
 import { useState } from "react"
 import { FaLightbulb } from "react-icons/fa"
+import { GiBrickWall, GiSoccerField } from "react-icons/gi"
+import { HiMiniCpuChip } from "react-icons/hi2"
+import { TbTargetArrow } from "react-icons/tb"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 
@@ -193,50 +196,25 @@ export const Compare = () => {
   const realName1 = player1.commonName ?? player1.name
   const realName2 = player2.commonName ?? player2.name
 
-  const atkCombo: number[] = []
-  const workRate = player1.attackingWorkRate > player2.attackingWorkRate ? 1 : player1.attackingWorkRate < player2.attackingWorkRate ? 2 : 0;
-  const weakFoot = player1.weakFootAbility > player2.weakFootAbility ? 1 : player1.weakFootAbility < player2.weakFootAbility ? 2 : 0;
-  const shootingRate = player1.shooting > player2.shooting ? 1 : player1.shooting < player2.shooting ? 2 : 0;
-  const paceRate = player1.pace > player2.pace ? 1 : player1.pace < player2.pace ? 2 : 0;
-  const skillRate = player1.skillMoves > player2.skillMoves ? 1 : player1.skillMoves < player2.skillMoves ? 2 : 0;
+  const player1Atk = calculatePlayerAtk(player1);
+  const player2Atk = calculatePlayerAtk(player2);
 
-  atkCombo.push(workRate, weakFoot, shootingRate, paceRate, skillRate);
+  const atkSkill = textComparison(realName1, realName2, player1Atk, player2Atk, 'ofensivas')
 
-  const player1Atk = countValues(atkCombo, 1);
-  const player2Atk = countValues(atkCombo, 2);
-  const equalsAtk = countValues(atkCombo, 0);
+  const player1Mid = calculatePlayerMidOfe(player1);
+  const player2Mid = calculatePlayerMidOfe(player2);
 
-  const atkSkill = textComparison(realName1, realName2, player1Atk, player2Atk, equalsAtk, 'ofensivas')
+  const midSkill = textComparison(realName1, realName2, player1Mid, player2Mid, 'meio campistas ofensivas')
 
-  const midCombo: number[] = []
-  const passRate = player1.passing > player2.passing ? 1 : player1.passing < player2.passing ? 2 : 0;
-  const dribblingRate = player1.dribbling > player2.dribbling ? 1 : player1.dribbling < player2.dribbling ? 2 : 0;
-  const defWorkRate = player1.defensiveWorkRate > player2.defensiveWorkRate ? 1 : player1.defensiveWorkRate < player2.defensiveWorkRate ? 2 : 0;
-  const defRate = player1.defending > player2.defending ? 1 : player1.defending < player2.defending ? 2 : 0;
+  const player1MidDef = calculatePlayerMidDef(player1);
+  const player2MidDef = calculatePlayerMidDef(player2);
 
-  midCombo.push(passRate, defRate, dribblingRate, defWorkRate, skillRate);
+  const midDefSkill = textComparison(realName1, realName2, player1MidDef, player2MidDef, 'meio campistas defensivas')
 
-  const player1mid = countValues(midCombo, 1);
-  const player2mid = countValues(midCombo, 2);
-  const equalsMid = countValues(midCombo, 0);
+  const player1Def = calculatePlayerDef(player1);
+  const player2Def = calculatePlayerDef(player2);
 
-  console.log(player1mid, player2mid, equalsMid);
-
-
-  const midSkill = textComparison(realName1, realName2, player1mid, player2mid, equalsMid, 'meio campistas')
-
-  const defCombo: number[] = []
-  const phyRate = player1.physicality > player2.physicality ? 1 : player1.physicality < player2.physicality ? 2 : 0;
-  const heightRate = player1.height > player2.height ? 1 : player1.height < player2.height ? 2 : 0;
-  const weightRate = player1.weight > player2.weight ? 1 : player1.weight < player2.weight ? 2 : 0;
-
-  defCombo.push(phyRate, defRate, defWorkRate, heightRate, weightRate);
-
-  const player1def = countValues(defCombo, 1);
-  const player2def = countValues(defCombo, 2);
-  const equalsDef = countValues(defCombo, 0);
-
-  const defSkill = textComparison(realName1, realName2, player1def, player2def, equalsDef, 'defensivas')
+  const defSkill = textComparison(realName1, realName2, player1Def, player2Def, 'defensivas')
 
   return (
     <Popover >
@@ -247,31 +225,103 @@ export const Compare = () => {
       </PopoverTrigger>
       <PopoverContent className="md:w-full sm:w-52">
         <div className="flex flex-col">
-          <div className="border-b">{atkSkill}</div>
-          <div className="border-b">{midSkill}</div>
-          <div className="border-b">{defSkill}</div>
+          <div className="border-b flex items-center"><TbTargetArrow size={14} className="text-green-700 mr-1" />{atkSkill}</div>
+          <div className="border-b flex items-center"><HiMiniCpuChip size={14} className="text-green-700 mr-1" />{midSkill}</div>
+          <div className="border-b flex items-center"><GiSoccerField size={14} className="text-green-700 mr-1" />{midDefSkill}</div>
+          <div className="border-b flex items-center"><GiBrickWall size={14} className="text-green-700 mr-1" />{defSkill}</div>
         </div>
       </PopoverContent>
     </Popover>
   )
 }
 
-const countValues = (array: number[], value: number) => {
-  return array.filter(item => item === value).length
+const normalizeValue = (value: number, min: number, max: number): number => {
+  return (value - min) / (max - min);
+};
+
+const textComparison = (realName1: string, realName2: string, player1combo: number, player2combo: number, type: string) => {
+  const normalizedPlayer1Combo = normalizeValue(player1combo, 20, 100)
+  const normalizedPlayer2Combo = normalizeValue(player2combo, 20, 100)
+
+  console.log(normalizedPlayer1Combo, normalizedPlayer2Combo, Math.abs(normalizedPlayer1Combo - normalizedPlayer2Combo));
+
+
+  let comboSkill = <h1></h1>;
+  if (Math.abs(normalizedPlayer1Combo - normalizedPlayer2Combo) < 0.1) {
+    comboSkill = <h1><strong>{realName1}</strong> e <strong>{realName2}</strong> têm características <strong>{type}</strong> equilibradas</h1>
+  } else if (normalizedPlayer1Combo > normalizedPlayer2Combo + 0.3) {
+    comboSkill = <h1><strong>{realName1}</strong> tem características <strong>{type}</strong> muito melhores</h1>
+  } else if (normalizedPlayer2Combo > normalizedPlayer1Combo + 0.3) {
+    comboSkill = <h1><strong>{realName2}</strong> tem características <strong>{type}</strong> muito melhores</h1>
+  } else if (normalizedPlayer1Combo > normalizedPlayer2Combo) {
+    comboSkill = <h1><strong>{realName1}</strong> tem características <strong>{type}</strong> melhores</h1>
+  } else if (normalizedPlayer2Combo > normalizedPlayer1Combo) {
+    comboSkill = <h1><strong>{realName2}</strong> tem características <strong>{type}</strong> melhores</h1>
+  }
+  return comboSkill;
 }
 
-const textComparison = (realName1: string, realName2: string, player1combo: number, player2combo: number, equalscombo: number, type: string) => {
-  let comboSkill = <h1><strong>{realName1}</strong> tem características ofensivas melhores que <strong>{realName2}</strong></h1>;
-  if (player1combo === player2combo || equalscombo === 5) {
-    comboSkill = <h1><strong>{realName1}</strong> e <strong>{realName2}</strong> têm características <strong>{type}</strong> equilibradas</h1>;
-  } else if (player1combo > player2combo + 3) {
-    comboSkill = <h1><strong>{realName1}</strong> tem características <strong>{type}</strong> muito melhores que <strong>{realName2}</strong></h1>;
-  } else if (player2combo > player1combo + 3) {
-    comboSkill = <h1><strong>{realName2}</strong> tem características <strong>{type}</strong> muito melhores que <strong>{realName1}</strong></h1>;
-  } else if (player1combo > player2combo) {
-    comboSkill = <h1><strong>{realName1}</strong> tem características <strong>{type}</strong> melhores que <strong>{realName2}</strong></h1>;
-  } else if (player2combo > player1combo) {
-    comboSkill = <h1><strong>{realName2}</strong> tem características <strong>{type}</strong> melhores que <strong>{realName1}</strong></h1>;
+const calculatePlayerAtk = (player: Player): number => {
+  const weights = {
+    shooting: 2,
+    pace: 1.7,
+    dribbling: 1.5,
+    physicality: 1.2
   }
-  return comboSkill
+
+  return (
+    player.shooting * weights.shooting +
+    player.pace * weights.pace +
+    player.dribbling * weights.dribbling +
+    player.physicality * weights.physicality
+  );
 }
+
+const calculatePlayerMidOfe = (player: Player): number => {
+  const weights = {
+    passing: 2,
+    dribbling: 1.7,
+    pace: 1,
+    shooting: 1,
+  }
+
+  return (
+    player.passing * weights.passing +
+    player.dribbling * weights.dribbling +
+    player.pace * weights.pace +
+    player.shooting * weights.shooting
+  );
+}
+
+const calculatePlayerMidDef = (player: Player): number => {
+  const weights = {
+    passing: 1.5,
+    dribbling: 1.2,
+    pace: 1,
+    defending: 1.8,
+    physicality: 1.5
+  }
+
+  return (
+    player.passing * weights.passing +
+    player.dribbling * weights.dribbling +
+    player.pace * weights.pace +
+    player.defending * weights.defending +
+    player.physicality * weights.physicality
+  );
+}
+
+const calculatePlayerDef = (player: Player): number => {
+  const weights = {
+    pace: 1,
+    defending: 2.5,
+    physicality: 1.7
+  }
+
+  return (
+    player.pace * weights.pace +
+    player.defending * weights.defending +
+    player.physicality * weights.physicality
+  );
+}
+
