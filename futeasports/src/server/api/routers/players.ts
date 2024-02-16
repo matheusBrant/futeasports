@@ -30,4 +30,16 @@ export const playerRouter = createTRPCRouter({
 
     return players
   }),
+
+  getPlayers: publicProcedure.query(async ({ ctx }) => {
+    const players = await ctx.db.players.findMany({
+      take: 18,
+      orderBy: { overallRating: "desc" },
+    });
+    if (!players) {
+      throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+    }
+
+    return players
+  }),
 });

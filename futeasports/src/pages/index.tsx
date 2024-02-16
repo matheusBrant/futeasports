@@ -1,3 +1,4 @@
+import { CardPlayerHome } from '@/components/CardHome';
 import { Header } from "@/components/Header";
 import { SideMenu } from "@/components/SideMenu";
 import { Button } from "@/components/ui/button";
@@ -16,14 +17,17 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="h-screen items-center justify-center bg-gradient-to-br from-cyan-100 to-cyan-600">
-        <Button className="absolute left-48 top-0 bg-transparent w-16 h-14 hover:bg-transparent" 
+        <Button className="absolute left-48 top-0 bg-transparent w-16 h-14 hover:bg-transparent"
           onClick={() => setSideMenuVisible(!sideMenuVisible)} >
-          <Menu size={24} /> 
+          <Menu size={24} />
         </Button>
         <Header />
         {sideMenuVisible && (
           <SideMenu path="/get-player">Comparar jogador</SideMenu>
         )}
+        <div>
+          <CardPlayerHome />
+        </div>
       </main>
     </>
   );
