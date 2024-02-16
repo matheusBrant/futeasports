@@ -27,14 +27,14 @@ export default function Dashboard() {
       <div className="flex h-screen">
         <div className="flex flex-col flex-grow">
           <Header />
-          <main className="flex-grow bg-gradient-to-br from-emerald-200 to-teal-800">
+          <main className="flex-grow bg-[url('https://i.ibb.co/qMwH0zv/cool-background.png')]">
             {sideMenuVisible && (
               <SideMenu path="/">Principal</SideMenu>
             )}
-             <Button className="absolute left-48 top-0 bg-transparent w-16 h-14 hover:bg-transparent" 
+            <Button className="absolute left-48 top-0 bg-transparent w-16 h-14 hover:bg-transparent"
               onClick={() => setSideMenuVisible(!sideMenuVisible)} >
-              <Menu size={24} /> 
-             </Button>
+              <Menu size={24} />
+            </Button>
             <CardComparison />
           </main>
         </div>

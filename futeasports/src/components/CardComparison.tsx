@@ -8,7 +8,7 @@ export const CardComparison = () => {
           <CardPlayer />
         </div>
         <div className="md:p-5 flex items-center justify-center">
-          <h1 className="font-mono text-5xl text-lime-950">VS</h1>
+          <h1 className="font-mono text-5xl text-lime-100">VS</h1>
         </div>
         <div className="sm:p-10 md:p-10 flex items-center justify-center">
           <CardPlayer />

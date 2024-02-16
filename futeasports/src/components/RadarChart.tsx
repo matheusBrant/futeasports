@@ -29,47 +29,55 @@ export const ReRadarChart = (props: { player1: Player, player2: Player }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const isGk = props.player1.isGk && props.player2.isGk
+  const subjectNameA = isGk ? "Técnica com as mãos" : "Finalização"
+  const subjectNameB = isGk ? "Técnica com os pés" : "Passe"
+  const subjectNameC = isGk ? "Velocidade" : "Defesa"
+  const subjectNameD = isGk ? "Posicionamento" : "Físico"
+  const subjectNameE = isGk ? "Reflexos" : "Drible"
+  const subjectNameF = isGk ? "Dividas" : "Ritmo"
+
   const data = [
     {
-      subject: "Finalização",
+      subject: subjectNameA,
       A: props.player1.shooting,
       B: props.player2.shooting,
       fullMark: 97,
     },
     {
-      subject: "Passe",
+      subject: subjectNameB,
       A: props.player1.passing,
       B: props.player2.passing,
       fullMark: 97,
     },
     {
-      subject: "Defesa",
+      subject: subjectNameC,
       A: props.player1.defending,
       B: props.player2.defending,
       fullMark: 97,
     },
     {
-      subject: "Físico",
+      subject: subjectNameD,
       A: props.player1.physicality,
       B: props.player2.physicality,
       fullMark: 97,
     },
     {
-      subject: "Drible",
+      subject: subjectNameE,
       A: props.player1.dribbling,
       B: props.player2.dribbling,
       fullMark: 97,
     },
     {
-      subject: "Ritmo",
+      subject: subjectNameF,
       A: props.player1.pace,
       B: props.player2.pace,
       fullMark: 97,
     },
   ];
   return (
-    <ResponsiveContainer width="100%" aspect={aspect}>
-      <RadarChart outerRadius={90} width={600} height={270} data={data}>
+    <ResponsiveContainer className="bg-gray-100" width="100%" aspect={aspect}>
+      <RadarChart outerRadius={90} width={600} height={300} data={data}>
         <PolarGrid />
         <PolarAngleAxis dataKey="subject" />
         <PolarRadiusAxis display="none" angle={30} domain={[20, 97]} />
