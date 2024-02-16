@@ -13,11 +13,12 @@ import {
 } from "@/components/ui/popover"
 import { api, type RouterOutputs } from "@/utils/api"
 import Image from "next/image"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { FaLightbulb } from "react-icons/fa"
 import { GiBrickWall, GiSoccerField } from "react-icons/gi"
 import { HiMiniCpuChip } from "react-icons/hi2"
 import { TbTargetArrow } from "react-icons/tb"
+import ReRadarChart from "./RadarChart"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 
@@ -183,6 +184,22 @@ const StarRating = (props: { max: number, rating: number }) => {
 }
 
 export const Compare = () => {
+  const [aspect, setAspect] = useState<number>(18);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setAspect(30);
+      } else {
+        setAspect(14);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   if (dataComparison.length !== 2) {
     return null;
   }
@@ -220,15 +237,17 @@ export const Compare = () => {
     <Popover >
       <PopoverTrigger asChild>
         <Button className="bg-emerald-100 shadow-xl"
-          variant="outline"><FaLightbulb size={14} className="text-yellow-500 mr-2" />
+          variant="outline"><FaLightbulb size={aspect} className="text-yellow-500 mr-2" />
           {realName1} vs {realName2}</Button>
       </PopoverTrigger>
       <PopoverContent className="md:w-full sm:w-52">
+        <ReRadarChart player1={player1} player2={player2} />
+
         <div className="flex flex-col">
-          <div className="border-b flex items-center"><TbTargetArrow size={14} className="text-green-700 mr-1" />{atkSkill}</div>
-          <div className="border-b flex items-center"><HiMiniCpuChip size={14} className="text-green-700 mr-1" />{midSkill}</div>
-          <div className="border-b flex items-center"><GiSoccerField size={14} className="text-green-700 mr-1" />{midDefSkill}</div>
-          <div className="border-b flex items-center"><GiBrickWall size={14} className="text-green-700 mr-1" />{defSkill}</div>
+          <div className="border-b flex items-center"><TbTargetArrow size={aspect} className="text-green-700 mr-1" />{atkSkill}</div>
+          <div className="border-b flex items-center"><HiMiniCpuChip size={aspect} className="text-green-700 mr-1" />{midSkill}</div>
+          <div className="border-b flex items-center"><GiSoccerField size={aspect} className="text-green-700 mr-1" />{midDefSkill}</div>
+          <div className="border-b flex items-center"><GiBrickWall size={aspect} className="text-green-700 mr-1" />{defSkill}</div>
         </div>
       </PopoverContent>
     </Popover>
@@ -242,9 +261,6 @@ const normalizeValue = (value: number, min: number, max: number): number => {
 const textComparison = (realName1: string, realName2: string, player1combo: number, player2combo: number, type: string) => {
   const normalizedPlayer1Combo = normalizeValue(player1combo, 20, 100)
   const normalizedPlayer2Combo = normalizeValue(player2combo, 20, 100)
-
-  console.log(normalizedPlayer1Combo, normalizedPlayer2Combo, Math.abs(normalizedPlayer1Combo - normalizedPlayer2Combo));
-
 
   let comboSkill = <h1></h1>;
   if (Math.abs(normalizedPlayer1Combo - normalizedPlayer2Combo) < 0.1) {
@@ -279,7 +295,7 @@ const calculatePlayerAtk = (player: Player): number => {
 
 const calculatePlayerMidOfe = (player: Player): number => {
   const weights = {
-    passing: 2,
+    passing: 2.5,
     dribbling: 1.7,
     pace: 1,
     shooting: 1,
@@ -313,15 +329,12 @@ const calculatePlayerMidDef = (player: Player): number => {
 
 const calculatePlayerDef = (player: Player): number => {
   const weights = {
-    pace: 1,
-    defending: 2.5,
+    defending: 2,
     physicality: 1.7
   }
 
   return (
-    player.pace * weights.pace +
     player.defending * weights.defending +
     player.physicality * weights.physicality
   );
 }
-
