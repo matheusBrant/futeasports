@@ -15,9 +15,8 @@ import { api, type RouterOutputs } from "@/utils/api"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import { FaLightbulb } from "react-icons/fa"
-import { GiBrickWall, GiSoccerField } from "react-icons/gi"
-import { HiMiniCpuChip } from "react-icons/hi2"
-import { TbTargetArrow } from "react-icons/tb"
+import { LuEqual } from "react-icons/lu"
+import { RiArrowUpDoubleLine, RiArrowUpSLine } from "react-icons/ri"
 import ReRadarChart from "./RadarChart"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
@@ -63,15 +62,15 @@ export const CardPlayer = () => {
 
   return (
     <div>
-      <Card className="w-[350px] bg-emerald-100 shadow-xl">
+      <Card className="text-gray-200 md:w-[350px] sm:w-[220px] bg-gradient-to-br from-teal-800 to-teal-400 shadow-md shadow-neutral-900 border-transparent">
         <CardHeader>
           <CardTitle className="flex items-center justify-center">
             Digite o nome abaixo
           </CardTitle>
-          <CardDescription className="flex items-center justify-center">Revele a carta</CardDescription>
+          <CardDescription className="flex items-center justify-center text-gray-900">Revele a carta</CardDescription>
         </CardHeader>
         <CardContent>
-          <Input className="w-full flex" type="text" value={value}
+          <Input className="w-full flex text-gray-900" type="text" value={value}
             onChange={(e) => {
               setValue(e.currentTarget.value.trimStart())
             }}
@@ -136,18 +135,16 @@ export const CardPlayer = () => {
         </div>
       </Card>
 
-      <Card className="pt-4 mt-3 w-[350px] bg-emerald-100 shadow-2xl">
-        <CardContent className="grid grid-cols-2 gap-4 w-full">
-          <CardTitle className="italic text-sm flex items-center justify-center ">Habilidade</CardTitle>
-          <div className="flex justify-center items-center rounded border-dashed border border-green-400 p-2">
+      <Card className="pt-4 mt-3 w-[350px] bg-gradient-to-br from-teal-800 to-teal-400 border-transparent shadow-md shadow-neutral-900">
+        <CardContent className="grid grid-cols-2 gap-1 w-full">
+          <CardTitle className="italic text-sm flex items-center justify-center text-gray-200">Habilidade</CardTitle>
+          <div className="flex justify-center items-center p-2 shadow-slate-600 shadow-md rounded-lg border border-transparent">
             {selectedPlayerSkillMoves ? <StarRating max={5} rating={selectedPlayerSkillMoves} /> :
               <h1 className="ml-1 text-amber-500">?</h1>
             }
           </div>
-          <CardTitle className="italic text-sm flex items-center justify-center">
-            Perna ruim
-          </CardTitle>
-          <div className="flex justify-center items-center rounded border-dashed border border-green-400 p-2">
+          <CardTitle className="italic text-sm flex items-center justify-center text-gray-200">Perna ruim</CardTitle>
+          <div className="flex justify-center items-center p-2 shadow-slate-600 shadow-md rounded-lg border border-transparent">
             {selectedPlayerWeakFoot ? <StarRating max={5} rating={selectedPlayerWeakFoot} /> :
               <h1 className="ml-1 text-amber-500">?</h1>
             }
@@ -168,9 +165,11 @@ const StarRating = (props: { max: number, rating: number }) => {
     const stars = []
     for (let i = 0; i < maxStars; i++) {
       if (i < numStars) {
-        stars.push(<span key={i} className="text-yellow-500 text-xl">&#9733;</span>)
+        stars.push(<span key={i} className="text-yellow-500 text-2xl hover:shadow-slate-600 hover:shadow-inner
+        rounded-full border border-transparent">&#9733;</span>)
       } else {
-        stars.push(<span key={i} className="text-gray-300 text-xl">&#9733;</span>)
+        stars.push(<span key={i} className="text-gray-300 hover:shadow-slate-600 hover:shadow-inner
+        rounded-full border border-transparent text-2xl">&#9733;</span>)
       }
     }
     return stars
@@ -184,22 +183,6 @@ const StarRating = (props: { max: number, rating: number }) => {
 }
 
 export const Compare = () => {
-  const [aspect, setAspect] = useState<number>(18);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 768) {
-        setAspect(30);
-      } else {
-        setAspect(14);
-      }
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   if (dataComparison.length !== 2) {
     return null;
   }
@@ -210,44 +193,70 @@ export const Compare = () => {
     return null
   }
 
+
   const realName1 = player1.commonName ?? player1.name
   const realName2 = player2.commonName ?? player2.name
+
+  let gkSpeedSkill = <h1></h1>
+  let gkHandSkill = <h1></h1>
+  if (player1.isGk === true && player2.isGk === true) {
+    const player1GkSpeed = calculatePlayerGkSpeed(player1);
+    const player2GkSpeed = calculatePlayerGkSpeed(player2);
+    const player1GkHand = calculatePlayerGkHand(player1);
+    const player2GkHand = calculatePlayerGkHand(player2);
+
+    gkSpeedSkill = TextComparison(realName1, realName2, player1GkSpeed, player2GkSpeed, 'como líbero')
+    gkHandSkill = TextComparison(realName1, realName2, player1GkHand, player2GkHand, 'como fixo')
+  }
+
 
   const player1Atk = calculatePlayerAtk(player1);
   const player2Atk = calculatePlayerAtk(player2);
 
-  const atkSkill = textComparison(realName1, realName2, player1Atk, player2Atk, 'ofensivas')
+  const atkSkill = TextComparison(realName1, realName2, player1Atk, player2Atk, 'na parte ofensiva')
 
   const player1Mid = calculatePlayerMidOfe(player1);
   const player2Mid = calculatePlayerMidOfe(player2);
 
-  const midSkill = textComparison(realName1, realName2, player1Mid, player2Mid, 'meio campistas ofensivas')
+  const midSkill = TextComparison(realName1, realName2, player1Mid, player2Mid, 'na criação')
 
   const player1MidDef = calculatePlayerMidDef(player1);
   const player2MidDef = calculatePlayerMidDef(player2);
 
-  const midDefSkill = textComparison(realName1, realName2, player1MidDef, player2MidDef, 'meio campistas defensivas')
+  const midDefSkill = TextComparison(realName1, realName2, player1MidDef, player2MidDef, 'no meio defensivo')
 
   const player1Def = calculatePlayerDef(player1);
   const player2Def = calculatePlayerDef(player2);
 
-  const defSkill = textComparison(realName1, realName2, player1Def, player2Def, 'defensivas')
+  const defSkill = TextComparison(realName1, realName2, player1Def, player2Def, 'na defesa')
 
   return (
     <Popover >
       <PopoverTrigger asChild>
-        <Button className="bg-emerald-100 shadow-xl"
-          variant="outline"><FaLightbulb size={aspect} className="text-yellow-500 mr-2" />
-          {realName1} vs {realName2}</Button>
+        {player1.isGk === true && player2.isGk === false || player1.isGk === false && player2.isGk === true ? null :
+          <Button className="bg-emerald-100 shadow-xl"
+            variant="outline"><FaLightbulb size={18} className="text-yellow-500 mr-2" />
+            {realName1} vs {realName2}</Button>
+        }
       </PopoverTrigger>
-      <PopoverContent className="md:w-full sm:w-52">
+      <PopoverContent className="md:w-[550px] sm:w-56">
         <ReRadarChart player1={player1} player2={player2} />
 
         <div className="flex flex-col">
-          <div className="border-b flex items-center"><TbTargetArrow size={aspect} className="text-green-700 mr-1" />{atkSkill}</div>
-          <div className="border-b flex items-center"><HiMiniCpuChip size={aspect} className="text-green-700 mr-1" />{midSkill}</div>
-          <div className="border-b flex items-center"><GiSoccerField size={aspect} className="text-green-700 mr-1" />{midDefSkill}</div>
-          <div className="border-b flex items-center"><GiBrickWall size={aspect} className="text-green-700 mr-1" />{defSkill}</div>
+          {player1.isGk === true && player1.isGk === true ?
+            <div>
+              <div className="border-b flex items-center">{gkSpeedSkill}</div>
+              <div className="border-b flex items-center">{gkHandSkill}</div>
+            </div>
+            :
+            <div>
+              <div className="border-b flex items-center">{atkSkill}</div>
+              <div className="border-b flex items-center">{midSkill}</div>
+              <div className="border-b flex items-center">{midDefSkill}</div>
+              <div className="border-b flex items-center">{defSkill}</div>
+            </div>
+          }
+
         </div>
       </PopoverContent>
     </Popover>
@@ -258,31 +267,68 @@ const normalizeValue = (value: number, min: number, max: number): number => {
   return (value - min) / (max - min);
 };
 
-const textComparison = (realName1: string, realName2: string, player1combo: number, player2combo: number, type: string) => {
+const TextComparison = (realName1: string, realName2: string, player1combo: number, player2combo: number, type: string) => {
+  const [aspect, setAspect] = useState<number>(20);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setAspect(30);
+      } else {
+        setAspect(20);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const normalizedPlayer1Combo = normalizeValue(player1combo, 20, 100)
   const normalizedPlayer2Combo = normalizeValue(player2combo, 20, 100)
 
   let comboSkill = <h1></h1>;
   if (Math.abs(normalizedPlayer1Combo - normalizedPlayer2Combo) < 0.1) {
-    comboSkill = <h1><strong>{realName1}</strong> e <strong>{realName2}</strong> têm características <strong>{type}</strong> equilibradas</h1>
-  } else if (normalizedPlayer1Combo > normalizedPlayer2Combo + 0.3) {
-    comboSkill = <h1><strong>{realName1}</strong> tem características <strong>{type}</strong> muito melhores</h1>
-  } else if (normalizedPlayer2Combo > normalizedPlayer1Combo + 0.3) {
-    comboSkill = <h1><strong>{realName2}</strong> tem características <strong>{type}</strong> muito melhores</h1>
+    comboSkill =
+      <div className="border-b flex items-center">
+        <LuEqual size={aspect} className="text-green-700 mr-1" />
+        <h1><strong>{realName1}</strong> e <strong>{realName2}</strong> são semelhantes <strong>{type}</strong></h1>
+      </div>
+
+  } else if (normalizedPlayer1Combo > normalizedPlayer2Combo + 0.4) {
+    comboSkill =
+      <div className="border-b flex items-center">
+        <RiArrowUpDoubleLine size={aspect} className="text-green-700 mr-1" />
+        <h1><strong>{realName1}</strong> é muito melhor <strong>{type}</strong></h1>
+      </div>
+  } else if (normalizedPlayer2Combo > normalizedPlayer1Combo + 0.4) {
+    comboSkill =
+      <div className="border-b flex items-center">
+        <RiArrowUpDoubleLine size={aspect} className="text-green-700 mr-1" />
+        <h1><strong>{realName2}</strong> é muito melhor <strong>{type}</strong></h1>
+      </div>
   } else if (normalizedPlayer1Combo > normalizedPlayer2Combo) {
-    comboSkill = <h1><strong>{realName1}</strong> tem características <strong>{type}</strong> melhores</h1>
+    comboSkill =
+      <div className="border-b flex items-center">
+        <RiArrowUpSLine size={aspect} className="text-green-700 mr-1" />
+        <h1><strong>{realName1}</strong> é melhor <strong>{type}</strong></h1>
+      </div>
   } else if (normalizedPlayer2Combo > normalizedPlayer1Combo) {
-    comboSkill = <h1><strong>{realName2}</strong> tem características <strong>{type}</strong> melhores</h1>
+    comboSkill =
+      <div className="border-b flex items-center">
+        <RiArrowUpSLine size={aspect} className="text-green-700 mr-1" />
+        <h1><strong>{realName2}</strong> é melhor <strong>{type}</strong></h1>
+      </div>
   }
   return comboSkill;
 }
 
 const calculatePlayerAtk = (player: Player): number => {
   const weights = {
-    shooting: 2,
-    pace: 1.7,
+    shooting: 2.5,
+    pace: 1.75,
     dribbling: 1.5,
-    physicality: 1.2
+    physicality: 1
   }
 
   return (
@@ -295,8 +341,8 @@ const calculatePlayerAtk = (player: Player): number => {
 
 const calculatePlayerMidOfe = (player: Player): number => {
   const weights = {
-    passing: 2.5,
-    dribbling: 1.7,
+    passing: 3,
+    dribbling: 2,
     pace: 1,
     shooting: 1,
   }
@@ -312,10 +358,10 @@ const calculatePlayerMidOfe = (player: Player): number => {
 const calculatePlayerMidDef = (player: Player): number => {
   const weights = {
     passing: 1.5,
-    dribbling: 1.2,
+    dribbling: 1.25,
     pace: 1,
-    defending: 1.8,
-    physicality: 1.5
+    defending: 2,
+    physicality: 1.75
   }
 
   return (
@@ -329,12 +375,52 @@ const calculatePlayerMidDef = (player: Player): number => {
 
 const calculatePlayerDef = (player: Player): number => {
   const weights = {
-    defending: 2,
-    physicality: 1.7
+    defending: 2.5,
+    physicality: 1.75
   }
 
   return (
     player.defending * weights.defending +
     player.physicality * weights.physicality
+  );
+}
+
+const calculatePlayerGkSpeed = (player: Player): number => {
+  const weights = {
+    gkDiving: 1.5,
+    gkHandling: 1,
+    gkKicking: 2.5,
+    gkReflexes: 1,
+    gkSpeed: 2,
+    gkPositioning: 1,
+  }
+
+  return (
+    player.pace * weights.gkDiving +
+    player.shooting * weights.gkHandling +
+    player.passing * weights.gkKicking +
+    player.dribbling * weights.gkReflexes +
+    player.defending * weights.gkSpeed +
+    player.physicality * weights.gkPositioning
+  );
+}
+
+const calculatePlayerGkHand = (player: Player): number => {
+  const weights = {
+    gkDiving: 1,
+    gkHandling: 2.5,
+    gkKicking: 1,
+    gkReflexes: 2,
+    gkSpeed: 1,
+    gkPositioning: 1.5,
+  }
+
+  return (
+    player.pace * weights.gkDiving +
+    player.shooting * weights.gkHandling +
+    player.passing * weights.gkKicking +
+    player.dribbling * weights.gkReflexes +
+    player.defending * weights.gkSpeed +
+    player.physicality * weights.gkPositioning
   );
 }
