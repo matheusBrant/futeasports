@@ -183,6 +183,22 @@ const StarRating = (props: { max: number, rating: number }) => {
 }
 
 export const Compare = () => {
+  const [aspect, setAspect] = useState<number>(20);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setAspect(30);
+      } else {
+        setAspect(20);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   if (dataComparison.length !== 2) {
     return null;
   }
@@ -205,30 +221,30 @@ export const Compare = () => {
     const player1GkHand = calculatePlayerGkHand(player1);
     const player2GkHand = calculatePlayerGkHand(player2);
 
-    gkSpeedSkill = TextComparison(realName1, realName2, player1GkSpeed, player2GkSpeed, 'como líbero')
-    gkHandSkill = TextComparison(realName1, realName2, player1GkHand, player2GkHand, 'como fixo')
+    gkSpeedSkill = textComparison(realName1, realName2, player1GkSpeed, player2GkSpeed, 'como líbero', aspect)
+    gkHandSkill = textComparison(realName1, realName2, player1GkHand, player2GkHand, 'como fixo', aspect)
   }
 
 
   const player1Atk = calculatePlayerAtk(player1);
   const player2Atk = calculatePlayerAtk(player2);
 
-  const atkSkill = TextComparison(realName1, realName2, player1Atk, player2Atk, 'na parte ofensiva')
+  const atkSkill = textComparison(realName1, realName2, player1Atk, player2Atk, 'na parte ofensiva', aspect)
 
   const player1Mid = calculatePlayerMidOfe(player1);
   const player2Mid = calculatePlayerMidOfe(player2);
 
-  const midSkill = TextComparison(realName1, realName2, player1Mid, player2Mid, 'na criação')
+  const midSkill = textComparison(realName1, realName2, player1Mid, player2Mid, 'na criação', aspect)
 
   const player1MidDef = calculatePlayerMidDef(player1);
   const player2MidDef = calculatePlayerMidDef(player2);
 
-  const midDefSkill = TextComparison(realName1, realName2, player1MidDef, player2MidDef, 'no meio defensivo')
+  const midDefSkill = textComparison(realName1, realName2, player1MidDef, player2MidDef, 'no meio defensivo', aspect)
 
   const player1Def = calculatePlayerDef(player1);
   const player2Def = calculatePlayerDef(player2);
 
-  const defSkill = TextComparison(realName1, realName2, player1Def, player2Def, 'na defesa')
+  const defSkill = textComparison(realName1, realName2, player1Def, player2Def, 'na defesa', aspect)
 
   return (
     <Popover >
@@ -267,23 +283,7 @@ const normalizeValue = (value: number, min: number, max: number): number => {
   return (value - min) / (max - min);
 };
 
-const TextComparison = (realName1: string, realName2: string, player1combo: number, player2combo: number, type: string) => {
-  const [aspect, setAspect] = useState<number>(20);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 768) {
-        setAspect(30);
-      } else {
-        setAspect(20);
-      }
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
+const textComparison = (realName1: string, realName2: string, player1combo: number, player2combo: number, type: string, aspect: number) => {
   const normalizedPlayer1Combo = normalizeValue(player1combo, 20, 100)
   const normalizedPlayer2Combo = normalizeValue(player2combo, 20, 100)
 
