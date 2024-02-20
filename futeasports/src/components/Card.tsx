@@ -17,6 +17,7 @@ import { useEffect, useState } from "react"
 import { FaLightbulb } from "react-icons/fa"
 import { LuEqual } from "react-icons/lu"
 import { RiArrowUpDoubleLine, RiArrowUpSLine } from "react-icons/ri"
+import defaultCard from '../assets/default_card.png'
 import ReRadarChart from "./RadarChart"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
@@ -37,12 +38,12 @@ export const CardPlayer = () => {
 
   const [popoverVisible, setPopoverVisible] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [cardLoading, setCardLoading] = useState(false)
 
   const handleClick = async () => {
     setLoading(true);
     setPopoverVisible(true)
     const newData = await refetch()
-
     setData(newData.data)
     setLoading(false)
   }
@@ -91,20 +92,21 @@ export const CardPlayer = () => {
                   </p>
                 </div>
                 <div className="grid gap-2">
-                  <div className="w-full">
+                  <div className="w-full flex items-center justify-center">
                     <ul>
                       {loading ? <Loading /> : (
                         data?.map((item: Player) => (
                           <li style={{ cursor: 'pointer' }} className="border-b-2 flex" key={item.id} onClick={() => {
-                            setIdPlayer(item.id);
-                            setSelectedPlayerImageUrl(item.shieldUrl);
-                            setSelectedPlayerRank(item.rank);
-                            setSelectedPlayerSkillMoves(item.skillMoves);
-                            setSelectedPlayerWeakFoot(item.weakFootAbility);
-                            setPopoverVisible(false);
+                            setIdPlayer(item.id)
+                            setSelectedPlayerImageUrl(item.shieldUrl)
+                            setSelectedPlayerRank(item.rank)
+                            setSelectedPlayerSkillMoves(item.skillMoves)
+                            setSelectedPlayerWeakFoot(item.weakFootAbility)
+                            setPopoverVisible(false)
+                            setCardLoading(true)
 
-                            dataComparison = dataComparison.filter((item: Player) => item.id !== idPlayer)
-                            dataComparison.push(item);
+                            dataComparison = dataComparison?.filter((item: Player) => item.id !== idPlayer)
+                            dataComparison?.push(item)
                           }}>
                             <p><Image src={item.avatarUrl} alt="Imagem" width={50} height={25} /></p>
                             <p className="ml-2 border-b-2 italic p-3 text-center">{item.position.shortName}</p>
@@ -128,10 +130,26 @@ export const CardPlayer = () => {
           </CardTitle>
         }
         <div className={`p-3 flex justify-center items-center`}>
-          {selectedPlayerImageUrl ?
-            <Image src={selectedPlayerImageUrl} alt="Imagem" width={200} height={100} /> :
-            <Image src={'https://i.ibb.co/Kx76Cp4/image.png'} alt="Imagem" width={200} height={100} />
-          }
+          {selectedPlayerImageUrl ? (
+            <div className="relative">
+              {cardLoading && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Loading />
+                </div>
+              )}
+              <Image
+                src={selectedPlayerImageUrl}
+                alt="Imagem"
+                width={200}
+                height={100}
+                onLoadingComplete={() => setCardLoading(false)}
+                onError={() => setCardLoading(false)}
+              />
+            </div>
+          ) : (
+            <Image src={defaultCard} alt="Imagem" width={200} height={100} />
+          )}
+
         </div>
       </Card>
 
@@ -152,7 +170,7 @@ export const CardPlayer = () => {
         </CardContent>
       </Card>
       <div className="m-5 flex justify-center items-center">
-        {dataComparison[0] && dataComparison[1] ? <Compare /> : <Compare />}
+        {dataComparison?.[0] && dataComparison?.[1] ? <Compare /> : <Compare />}
       </div>
     </div>
 
@@ -199,7 +217,7 @@ export const Compare = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  if (dataComparison.length !== 2) {
+  if (dataComparison?.length !== 2) {
     return null;
   }
 
