@@ -27,7 +27,7 @@ export default function Dashboard() {
       <div className="flex h-screen">
         <div className="flex flex-col flex-grow">
           <Header />
-          <main className="flex-grow bg-[url('https://i.ibb.co/qMwH0zv/cool-background.png')]">
+          <main className="flex-grow bg-[url('../assets/comparison_bg.png')]">
             {sideMenuVisible && (
               <SideMenu path="/">Principal</SideMenu>
             )}
