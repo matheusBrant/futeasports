@@ -31,9 +31,13 @@ export const playerRouter = createTRPCRouter({
     return players
   }),
 
-  getPlayers: publicProcedure.query(async ({ ctx }) => {
+  getPlayers: publicProcedure.input(z.object({ page: z.number() })).query(async ({ ctx, input }) => {
+    const { page } = input;
+
     const players = await ctx.db.players.findMany({
+      skip: 18 * (page - 1),
       take: 18,
+      select: { shieldUrl: true },
       orderBy: { overallRating: "desc" },
     });
     if (!players) {
