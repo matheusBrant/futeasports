@@ -24,6 +24,7 @@ export const playerRouter = createTRPCRouter({
       },
       orderBy: { overallRating: "desc" },
     });
+
     if (!players) {
       throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
     }
@@ -31,15 +32,23 @@ export const playerRouter = createTRPCRouter({
     return players
   }),
 
-  getPlayers: publicProcedure.input(z.object({ page: z.number() })).query(async ({ ctx, input }) => {
+  getPlayers: publicProcedure.input(z.object({ page: z.number().min(1) })).query(async ({ ctx, input }) => {
     const { page } = input;
 
     const players = await ctx.db.players.findMany({
       skip: 18 * (page - 1),
       take: 18,
       select: { shieldUrl: true },
-      orderBy: { overallRating: "desc" },
+      orderBy: [
+        {
+          overallRating: 'desc',
+        },
+        {
+          rank: 'asc',
+        }
+      ],
     });
+
     if (!players) {
       throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
     }
