@@ -29,8 +29,6 @@ export const CardPlayerHome = () => {
       setLoading(true);
       const newData = await refetch();
       setData(newData.data);
-      console.log(newData.data);
-
       setLoading(false);
     };
 
@@ -45,12 +43,14 @@ export const CardPlayerHome = () => {
 
   return (
     <div>
-      <div className="md:p-20 sm:p-8 flex justify-center items-center">
+      <div className="md:pt-15 sm:pt-8 flex justify-center items-center">
         <div className="grid grid-cols-6 gap-5">
           {loading && !isLoading ? <Loading /> : (
             data?.map((player: Player, index) => (
               <div key={index}>
-                <Image src={player.shieldUrl} alt={`Imagem ${index + 1}`} width={140} height={95} />
+                <Image width="0"
+                  height="0"
+                  className="w-36 h-auto" src={player.shieldUrl} alt={`Imagem ${index + 1}`} />
               </div>
             ))
           )}
