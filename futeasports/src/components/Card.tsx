@@ -94,7 +94,7 @@ export const CardPlayer = () => {
                 <div className="grid gap-2">
                   <div className="w-full flex items-center justify-center">
                     <ul>
-                      {loading ? <Loading /> : (
+                      {loading ? <Loading size={8} color={"teal"} /> : (
                         data?.map((item: Player) => (
                           <li style={{ cursor: 'pointer' }} className="border-b-2 flex" key={item.id} onClick={() => {
                             setIdPlayer(item.id)
@@ -134,7 +134,7 @@ export const CardPlayer = () => {
             <div className="relative">
               {cardLoading && (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <Loading />
+                  <Loading size={8} color={"teal"} />
                 </div>
               )}
               <Image
