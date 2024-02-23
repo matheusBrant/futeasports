@@ -29,6 +29,8 @@ export const CardPlayerHome = () => {
       setLoading(true);
       const newData = await refetch();
       setData(newData.data);
+      console.log(newData.data);
+
       setLoading(false);
     };
 

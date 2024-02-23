@@ -45,6 +45,9 @@ export const playerRouter = createTRPCRouter({
         },
         {
           rank: 'asc',
+        },
+        {
+          name: 'asc',
         }
       ],
     });
