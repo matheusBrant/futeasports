@@ -63,7 +63,7 @@ export const CardPlayer = () => {
 
   return (
     <div>
-      <Card className="text-gray-200 md:w-[350px] sm:w-[220px] bg-gradient-to-br from-teal-800 to-teal-400 shadow-md shadow-neutral-900 border-transparent">
+      <Card className="text-gray-200 w-[350px] bg-gradient-to-br from-teal-800 to-teal-400 shadow-md shadow-neutral-900 border-transparent">
         <CardHeader>
           <CardTitle className="flex items-center justify-center">
             Digite o nome abaixo
@@ -94,7 +94,7 @@ export const CardPlayer = () => {
                 <div className="grid gap-2">
                   <div className="w-full flex items-center justify-center">
                     <ul>
-                      {loading ? <Loading size={8} color={"teal"} /> : (
+                      {loading ? <Loading /> : (
                         data?.map((item: Player) => (
                           <li style={{ cursor: 'pointer' }} className="border-b-2 flex" key={item.id} onClick={() => {
                             setIdPlayer(item.id)
@@ -108,7 +108,7 @@ export const CardPlayer = () => {
                             dataComparison = dataComparison?.filter((item: Player) => item.id !== idPlayer)
                             dataComparison?.push(item)
                           }}>
-                            <p><Image src={item.avatarUrl} alt="Imagem" width={50} height={25} /></p>
+                            <p><Image src={item.avatarUrl} alt="Imagem" width="0" height="0" className="w-12 h-auto" /></p>
                             <p className="ml-2 border-b-2 italic p-3 text-center">{item.position.shortName}</p>
                             <p className="italic p-3 text-center">{item.commonName ?? item.name}</p>
                           </li>
@@ -134,20 +134,19 @@ export const CardPlayer = () => {
             <div className="relative">
               {cardLoading && (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <Loading size={8} color={"teal"} />
+                  <Loading />
                 </div>
               )}
               <Image
+                width="0" height="0" className="w-48 h-auto"
                 src={selectedPlayerImageUrl}
                 alt="Imagem"
-                width={200}
-                height={100}
-                onLoadingComplete={() => setCardLoading(false)}
+                onLoad={() => setCardLoading(false)}
                 onError={() => setCardLoading(false)}
               />
             </div>
           ) : (
-            <Image src={defaultCard} alt="Imagem" width={200} height={100} />
+            <Image src={defaultCard} alt="Imagem" width="0" height="0" className="w-48 h-auto" />
           )}
 
         </div>

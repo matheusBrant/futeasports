@@ -10,7 +10,7 @@ import {
 import { api, type RouterOutputs } from "@/utils/api";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Loading } from "./Loading";
+import { SkeletonLoading } from "./Loading";
 
 type Player = RouterOutputs["player"]["getPlayers"][number]
 
@@ -45,12 +45,10 @@ export const CardPlayerHome = () => {
     <div>
       <div className="md:pt-15 sm:pt-8 flex justify-center items-center">
         <div className="grid grid-cols-6 gap-5">
-          {loading && !isLoading ? <Loading /> : (
+          {loading && !isLoading ? <SkeletonLoading /> : (
             data?.map((player: Player, index) => (
               <div key={index}>
-                <Image width="0"
-                  height="0"
-                  className="w-36 h-auto" src={player.shieldUrl} alt={`Imagem ${index + 1}`} />
+                <Image width="0" height="0" className="w-36 h-auto" src={player.shieldUrl} alt={`Imagem ${index + 1}`} />
               </div>
             ))
           )}
