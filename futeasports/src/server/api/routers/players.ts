@@ -58,4 +58,28 @@ export const playerRouter = createTRPCRouter({
 
     return players
   }),
+
+  getFlags: publicProcedure.input(z.object({ page: z.number().min(1) })).query(async ({ ctx, input }) => {
+    const { page } = input;
+    console.log(page);
+
+    const totalCount = await ctx.db.nationalities.count()
+
+    const randomIndex = Math.floor(Math.random() * totalCount)
+
+    const flags = await ctx.db.nationalities.findMany({
+      skip: randomIndex,
+      take: 1,
+      select: { imageUrl: true },
+      orderBy: {
+        name: 'asc',
+      }
+    });
+
+    if (!flags) {
+      throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+    }
+
+    return flags
+  }),
 });

@@ -7,8 +7,11 @@ import { UserButton } from "@clerk/nextjs";
 import Head from "next/head";
 import { useState } from "react";
 import { Menu } from 'react-feather';
+import { CiCircleList } from "react-icons/ci";
+import { MdFlag } from "react-icons/md";
+import { VscGitCompare } from "react-icons/vsc";
 
-export default function Dashboard() {
+export default function GetPlayer() {
   const { isLoaded, isSignedIn } = useUser();
   const [sideMenuVisible, setSideMenuVisible] = useState(false);
 
@@ -29,7 +32,17 @@ export default function Dashboard() {
           <Header />
           <main className="flex-grow bg-[url('../assets/comparison_bg.png')]">
             {sideMenuVisible && (
-              <SideMenu path="/">Principal</SideMenu>
+              <div className="absolute left-0 top-47 w-48 z-50 shadow-md bg-teal-950">
+                <div className="p-4">
+                  <SideMenu
+                    path="/get-player"
+                    icon={[<CiCircleList className="text-green-50" key="icon1" />,
+                    <VscGitCompare className="text-green-50" key="icon2" />]}
+                    multiPath={["/", "/get-player"]}
+                    accLength={2} menuTitle="Jogadores">{["Listagem", "Comparar jogador"]}
+                  </SideMenu>
+                  <SideMenu icon={[<MdFlag className="text-green-600" key="icon3" />]} path="/flags" menuTitle="Jogos" >{["Bandeiras"]}</SideMenu>                </div>
+              </div>
             )}
             <Button className="absolute left-48 top-0 bg-transparent w-16 h-14 hover:bg-transparent"
               onClick={() => setSideMenuVisible(!sideMenuVisible)} >
