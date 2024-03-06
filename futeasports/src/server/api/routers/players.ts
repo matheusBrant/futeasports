@@ -79,4 +79,40 @@ export const playerRouter = createTRPCRouter({
 
     return flags
   }),
+
+  buildSquad: publicProcedure.input(z.object({ page: z.boolean() })).query(async ({ ctx }) => {
+    const position = await ctx.db.positions.findFirst({
+      where: {
+        shortName: 'GK'
+      }
+    });
+
+    if (!position) {
+      throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+    }
+    const players = await ctx.db.players.findMany({
+      take: 11,
+      orderBy: {
+        name: 'asc',
+      },
+      where: {
+        idPosition: position.idApi // Use o ID da posição na consulta where
+      },
+      select: {
+        name: true,
+        avatarUrl: true,
+        position: {
+          select: {
+            shortName: true
+          }
+        }
+      },
+    });
+
+    if (!players) {
+      throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+    }
+
+    return players
+  }),
 });

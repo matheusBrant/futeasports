@@ -9,6 +9,7 @@ import { useState } from "react";
 import { Menu } from 'react-feather';
 import { CiCircleList } from "react-icons/ci";
 import { MdFlag } from "react-icons/md";
+import { SlChemistry } from "react-icons/sl";
 import { VscGitCompare } from "react-icons/vsc";
 
 export default function GetPlayer() {
@@ -36,14 +37,19 @@ export default function GetPlayer() {
                 <div className="p-4">
                   <SideMenu
                     path="/get-player"
-                    icon={[<CiCircleList className="text-green-50" key="icon1" />,
-                    <VscGitCompare className="text-green-50" key="icon2" />]}
-                    multiPath={["/", "/get-player"]}
-                    accLength={2} menuTitle="Jogadores">{["Listagem", "Comparar jogador"]}
+                    icon={
+                      [
+                        <CiCircleList className="text-green-50" key="icon1" />,
+                        <VscGitCompare className="text-green-50" key="icon2" />,
+                        <SlChemistry className="text-green-50" key="icon2" />
+                      ]
+                    }
+                    multiPath={["/", "/get-player", "/squad-builder"]}
+                    accLength={2} menuTitle="Jogadores">{["Listagem", "Comparar jogador", "Montador de elencos"]}
                   </SideMenu>
                   <SideMenu icon={[<MdFlag className="text-green-600" key="icon3" />]}
-                    path="/flags" menuTitle="Jogos" >{["Bandeiras"]}</SideMenu>
-
+                    path="/flags" menuTitle="Jogos" >{["Bandeiras"]}
+                  </SideMenu>
                 </div>
               </div>
             )}

@@ -7,7 +7,7 @@ import {
 import Link from 'next/link';
 
 interface DynamicLinkProps {
-  path: string;
+  path?: string;
   menuTitle: string;
   children: React.ReactNode[];
   accLength?: number;
@@ -38,12 +38,12 @@ export const SideMenu = ({ path, children, menuTitle, accLength, multiPath, icon
   )
 }
 
-const AccContent = (props: { path: string, textLink: React.ReactNode, icon?: JSX.Element | null }) => {
+const AccContent = (props: { path?: string, textLink: React.ReactNode, icon?: JSX.Element | null }) => {
   return (
     <AccordionContent >
       <div className="flex items-center">
         {props.icon ? props.icon : null}
-        <Link className="text-white ml-2" href={props.path}>{props.textLink}</Link>
+        <Link className="text-white ml-2" href={props.path ?? ''}>{props.textLink}</Link>
       </div>
     </AccordionContent >
   )
