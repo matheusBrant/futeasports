@@ -41,7 +41,8 @@ export default function GetPlayer() {
                     multiPath={["/", "/get-player"]}
                     accLength={2} menuTitle="Jogadores">{["Listagem", "Comparar jogador"]}
                   </SideMenu>
-                  <SideMenu icon={[<MdFlag className="text-green-600" key="icon3" />]} path="/flags" menuTitle="Jogos" >{["Bandeiras"]}</SideMenu>                </div>
+                  <SideMenu icon={[<MdFlag className="text-green-600" key="icon3" />]} path="/flags" menuTitle="Jogos" >{["Bandeiras"]}</SideMenu>
+                </div>
               </div>
             )}
             <Button className="absolute left-48 top-0 bg-transparent w-16 h-14 hover:bg-transparent"
