@@ -59,10 +59,7 @@ export const playerRouter = createTRPCRouter({
     return players
   }),
 
-  getFlags: publicProcedure.input(z.object({ page: z.number().min(1) })).query(async ({ ctx, input }) => {
-    const { page } = input;
-    console.log(page);
-
+  getFlags: publicProcedure.input(z.object({ page: z.number().min(1) })).query(async ({ ctx }) => {
     const totalCount = await ctx.db.nationalities.count()
 
     const randomIndex = Math.floor(Math.random() * totalCount)
@@ -70,7 +67,7 @@ export const playerRouter = createTRPCRouter({
     const flags = await ctx.db.nationalities.findMany({
       skip: randomIndex,
       take: 1,
-      select: { imageUrl: true },
+      select: { imageUrl: true, name: true },
       orderBy: {
         name: 'asc',
       }
